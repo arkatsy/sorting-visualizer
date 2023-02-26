@@ -1,5 +1,5 @@
 export default function Visualizer() {
-  return <VisualizerLayout>Viz</VisualizerLayout>;
+  return <VisualizerLayout>Visualization</VisualizerLayout>;
 }
 
 function VisualizerLayout({ children }: { children: React.ReactNode }) {

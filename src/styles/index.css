@@ -5,6 +5,13 @@
 @layer base {
   body {
     font-family: "Open Sans", sans-serif;
-    @apply overflow-y-hidden min-w-[530px] bg-[#292b2f];
+    @apply overflow-y-hidden  bg-[#292b2f] min-w-[900px];
+  }
+}
+
+@layer components {
+  .settings-tooltip {
+    @apply absolute bg-black text-white w-auto rounded-md font-bold 
+    transition-all duration-100 min-w-max top-12 text-sm scale-0 left-0 select-none origin-left;
   }
 }
