@@ -1,8 +1,16 @@
 export default function Visualizer({ array }: { array: Array<number> }) {
   return (
     <VisualizerLayout>
-      <main className="w-full bg-slate-900 my-4 lg:my-10">
-        <div>{array}</div>
+      <main className=" my-4 lg:my-10 flex items-end justify-center max-w-[1920px]">
+        {array.map((value, index) => (
+          <div
+            className="bg-[#5b616b] border border-[#292b2f] flex items-center justify-center text-white w-full rounded-md"
+            style={{
+              height: `${value}px`,
+            }}
+            key={index}
+          />
+        ))}
       </main>
     </VisualizerLayout>
   );

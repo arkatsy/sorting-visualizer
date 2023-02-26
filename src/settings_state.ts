@@ -1,5 +1,5 @@
 const MIN = 5;
-const MAX = 100;
+const MAX = 680;
 
 export enum SettingsActionType {
   CHANGE_STATUS = "CHANGE_STATUS",

@@ -204,6 +204,7 @@ function InputRange({
       <input
         type="range"
         min={5}
+        max={450}
         value={value}
         onChange={onChange}
         className="w-full accent-[#5865f2]"
