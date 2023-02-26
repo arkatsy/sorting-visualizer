@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import React, { Fragment, useState } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import {
   ALGORITHMS,
@@ -15,6 +15,57 @@ export default function Settings({
   dispatcher: React.Dispatch<SettingsActions>;
   state: SettingsState;
 }) {
+  const [tooltip, setTooltip] = useState(true);
+
+  const handleArraySizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatcher({
+      type: SettingsActionType.CHANGE_SIZE,
+      payload: Number(e.target.value),
+    });
+  };
+
+  const handleAlgorithmChange = (newAlgorithm: AlgorithmType) => {
+    dispatcher({
+      type: SettingsActionType.CHANGE_ALGORITHM,
+      payload: newAlgorithm,
+    });
+  };
+
+  const handleStart = () => {
+    dispatcher({
+      type: SettingsActionType.CHANGE_STATUS,
+      payload: "ACTIVE",
+    });
+    setTooltip(false);
+  };
+
+  const handleStop = () => {
+    dispatcher({
+      type: SettingsActionType.CHANGE_STATUS,
+      payload: "STOPPED",
+    });
+    setTooltip(true);
+  };
+
+  const handleReset = () => {
+    dispatcher({
+      type: SettingsActionType.CHANGE_STATUS,
+      payload: "STOPPED",
+    });
+    dispatcher({
+      type: SettingsActionType.NEW_ARRAY,
+      payload: state.size,
+    });
+    setTooltip(true);
+  };
+
+  const handleNewArray = () => {
+    dispatcher({
+      type: SettingsActionType.NEW_ARRAY,
+      payload: state.size,
+    });
+  };
+
   return (
     <>
       <HeaderLayout>
@@ -22,42 +73,40 @@ export default function Settings({
           <div className="group relative">
             <Button
               label="New Array"
-              onClick={() =>
-                dispatcher({
-                  type: SettingsActionType.NEW_ARRAY,
-                  payload: state.size,
-                })
-              }
+              onClick={handleNewArray}
+              disabled={state.status === "ACTIVE"}
             />
-            <span className="settings-tooltip group-hover:scale-100 py-2 px-4">
-              Generates new random array of size {"  "}
-              <span className="text-green-600"> {state.size}</span> 💡
-            </span>
+            {tooltip && (
+              <span className="settings-tooltip group-hover:scale-100 py-2 px-4">
+                Generates new random array of size {"  "}
+                <span className="text-green-600"> {state.size}</span> 💡
+              </span>
+            )}
           </div>
           <InputRange
             label={`Array Size: ${state.size}`}
             value={state.size}
-            onChange={(e) =>
-              dispatcher({
-                type: SettingsActionType.CHANGE_SIZE,
-                payload: Number(e.target.value),
-              })
-            }
+            onChange={handleArraySizeChange}
+            disabled={state.status === "ACTIVE"}
           />
           <AlgorithmOptions
             selectedOption={state.algorithm}
-            onChange={(newAlgorithm) =>
-              dispatcher({
-                type: SettingsActionType.CHANGE_ALGORITHM,
-                payload: newAlgorithm,
-              })
-            }
+            onChange={handleAlgorithmChange}
+            disabled={state.status === "ACTIVE"}
           />
 
           <div className="absolute right-0 flex gap-4">
-            <Button label="Start" />
-            <Button label="Stop" disabled />
-            <Button label="Reset" />
+            <Button
+              label="Start"
+              onClick={handleStart}
+              disabled={state.status === "ACTIVE"}
+            />
+            <Button
+              label="Stop"
+              disabled={!(state.status === "ACTIVE")}
+              onClick={handleStop}
+            />
+            <Button label="Reset" onClick={handleReset} />
           </div>
         </div>
       </HeaderLayout>
@@ -86,9 +135,11 @@ const UI_ALGORITHMS = {
 function AlgorithmOptions({
   selectedOption,
   onChange = () => {},
+  disabled = false,
 }: {
   selectedOption: AlgorithmType;
   onChange?: (value: AlgorithmType) => void;
+  disabled?: boolean;
 }) {
   return (
     <Listbox
@@ -96,6 +147,7 @@ function AlgorithmOptions({
       value={selectedOption}
       className="relative"
       onChange={onChange}
+      disabled={disabled}
     >
       <Listbox.Button
         className="bg-[#2f3136] px-4 py-2 rounded-md hover:bg-[#40444b] select-none
@@ -151,6 +203,7 @@ function InputRange({
       <label className="text-sm">{label}</label>
       <input
         type="range"
+        min={5}
         value={value}
         onChange={onChange}
         className="w-full accent-[#5865f2]"
