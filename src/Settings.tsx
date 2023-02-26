@@ -1,32 +1,57 @@
 import { Fragment, useState } from "react";
 import { Listbox, Transition } from "@headlessui/react";
-import { ALGORITHMS } from "./settings_state";
+import {
+  ALGORITHMS,
+  type SettingsState,
+  type SettingsActions,
+  type AlgorithmType,
+  SettingsActionType,
+} from "./settings_state";
 
-export default function Settings() {
-  const [num, setNum] = useState(10);
-  const [algoSelected, setAlgoSelected] = useState<typeof ALGORITHMS[number]>(
-    ALGORITHMS[0]
-  );
-
+export default function Settings({
+  dispatcher,
+  state,
+}: {
+  dispatcher: React.Dispatch<SettingsActions>;
+  state: SettingsState;
+}) {
   return (
     <>
       <HeaderLayout>
         <div className="flex gap-8 w-full relative">
           <div className="group relative">
-            <Button label="New Array" />
+            <Button
+              label="New Array"
+              onClick={() =>
+                dispatcher({
+                  type: SettingsActionType.NEW_ARRAY,
+                  payload: state.size,
+                })
+              }
+            />
             <span className="settings-tooltip group-hover:scale-100 py-2 px-4">
-              Generates new random array of size{" "}
-              <span className="text-green-600">{num}</span> 💡
+              Generates new random array of size {"  "}
+              <span className="text-green-600"> {state.size}</span> 💡
             </span>
           </div>
           <InputRange
-            label={`Array Size: ${num}`}
-            value={num}
-            onChange={(e) => setNum(Number(e.target.value))}
+            label={`Array Size: ${state.size}`}
+            value={state.size}
+            onChange={(e) =>
+              dispatcher({
+                type: SettingsActionType.CHANGE_SIZE,
+                payload: Number(e.target.value),
+              })
+            }
           />
           <AlgorithmOptions
-            selectedOption={algoSelected}
-            onChange={setAlgoSelected}
+            selectedOption={state.algorithm}
+            onChange={(newAlgorithm) =>
+              dispatcher({
+                type: SettingsActionType.CHANGE_ALGORITHM,
+                payload: newAlgorithm,
+              })
+            }
           />
 
           <div className="absolute right-0 flex gap-4">
@@ -62,8 +87,8 @@ function AlgorithmOptions({
   selectedOption,
   onChange = () => {},
 }: {
-  selectedOption: typeof ALGORITHMS[number];
-  onChange?: (value: typeof ALGORITHMS[number]) => void;
+  selectedOption: AlgorithmType;
+  onChange?: (value: AlgorithmType) => void;
 }) {
   return (
     <Listbox
