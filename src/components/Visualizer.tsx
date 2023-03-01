@@ -1,10 +1,18 @@
-export default function Visualizer({ array }: { array: Array<number> }) {
+import { Actions, State } from "../lib/manager";
+
+export default function Visualizer({
+  dispatch,
+  state,
+}: {
+  dispatch: React.Dispatch<Actions>;
+  state: State;
+}) {
   return (
     <VisualizerLayout>
       <main className=" my-4 lg:my-10 flex items-end justify-center max-w-[1920px]">
-        {array.map((value, index) => (
+        {state.array.map((value, index) => (
           <div
-            className="bg-[#5b616b] border border-[#292b2f] flex items-center justify-center text-white w-full rounded-md"
+            className="arrayBars bg-[#5b616b] border border-[#292b2f] flex items-center justify-center text-white w-full rounded-md"
             style={{
               height: `${value}px`,
             }}

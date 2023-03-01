@@ -1,14 +1,15 @@
 import { useReducer } from "react";
-import Settings from "./Settings";
-import Visualizer from "./Visualizer";
-import { INITIAL_STATE, settingsReducer } from "./settings_state";
+import Settings from "./components/Settings";
+import Visualizer from "./components/Visualizer";
+import { reducer, INITIAL_STATE } from "./lib/manager";
 
 export default function App() {
-  const [state, dispatch] = useReducer(settingsReducer, INITIAL_STATE);
+  const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
+  console.log(state);
   return (
     <>
-      <Settings dispatcher={dispatch} state={state} />
-      <Visualizer array={state.array} />
+      <Settings dispatch={dispatch} state={state} />
+      <Visualizer dispatch={dispatch} state={state} />
     </>
   );
 }
