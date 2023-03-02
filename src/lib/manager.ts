@@ -2,11 +2,10 @@ import React from "react";
 
 const MIN = 10;
 const MAX = 640;
+const INITIAL_SIZE = 20;
 
 export function generateRandomArray(size: number, min: number, max: number) {
-  return Array.from({ length: size }, () =>
-    Math.floor(Math.random() * (max - min + 1) + min)
-  );
+  return Array.from({ length: size }, () => Math.floor(Math.random() * (max - min + 1) + min));
 }
 
 export enum Algorithm {
@@ -25,7 +24,7 @@ export type State = {
 export const INITIAL_STATE: State = {
   status: "IDLE",
   algorithm: Algorithm.BUBBLE_SORT,
-  array: generateRandomArray(10, MIN, MAX),
+  array: generateRandomArray(INITIAL_SIZE, MIN, MAX),
 };
 
 export enum Action {

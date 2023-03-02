@@ -1,6 +1,6 @@
 export function InputRange({
   label = "",
-  value = 10,
+  value = 25,
   onChange = () => {},
   ...props
 }: {
@@ -14,7 +14,7 @@ export function InputRange({
       <input
         type="range"
         min={5}
-        max={450}
+        max={50}
         value={value}
         onChange={onChange}
         className="w-full accent-[#5865f2]"

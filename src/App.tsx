@@ -5,7 +5,6 @@ import { reducer, INITIAL_STATE } from "./lib/manager";
 
 export default function App() {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
-  console.log(state);
   return (
     <>
       <Settings dispatch={dispatch} state={state} />

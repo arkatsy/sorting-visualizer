@@ -14,10 +14,10 @@ export default function Settings({
   const shouldDisable = state.status === "SORTING";
   return (
     <HeaderLayout>
-      <div className="flex gap-8 w-full relative">
+      <div className="flex gap-8 w-full justify-center">
         <div className="group relative">
           <Button
-            label="New Array"
+            label="Generate New Array"
             onClick={() => {
               dispatch({ type: Action.NEW_ARRAY });
             }}
@@ -45,19 +45,16 @@ export default function Settings({
           }}
           disabled={shouldDisable}
         />
-
-        <div className="absolute right-0 flex gap-4">
-          <Button
-            label="Start"
-            onClick={() => {
-              dispatch({
-                type: Action.SET_STATUS,
-                payload: "SORTING",
-              });
-            }}
-            disabled={shouldDisable}
-          />
-        </div>
+        <Button
+          label="Start"
+          onClick={() => {
+            dispatch({
+              type: Action.SET_STATUS,
+              payload: "SORTING",
+            });
+          }}
+          disabled={shouldDisable}
+        />
       </div>
     </HeaderLayout>
   );
