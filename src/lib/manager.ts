@@ -10,7 +10,7 @@ export function generateRandomArray(size: number, min: number, max: number) {
 
 export enum Algorithm {
   BUBBLE_SORT = "Bubble Sort",
-  MERGE_SORT = "Merge Sort",
+  HEAP_SORT = "Heap Sort",
 }
 
 export type Status = "IDLE" | "SORTING";

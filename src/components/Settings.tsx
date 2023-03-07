@@ -36,7 +36,7 @@ export default function Settings({
           disabled={shouldDisable}
         />
         <AlgorithmOptions
-          selectedOption={Algorithm.BUBBLE_SORT}
+          selectedOption={state.algorithm}
           onChange={(value) => {
             dispatch({
               type: Action.SET_ALGORITHM,
