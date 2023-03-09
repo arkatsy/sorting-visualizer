@@ -3,6 +3,8 @@ import { Action, Actions, Algorithm, State } from "../lib/manager";
 import { bubbleSort } from "../algorithms/bubbleSort";
 import { heapSort } from "../algorithms/heapSort";
 import { mergeSort } from "../algorithms/mergeSort";
+import { selectionSort } from "../algorithms/selectionSort";
+import { insertionSort } from "../algorithms/insertionSort";
 
 const COLORS = {
   RED: "#ff3f43",
@@ -29,6 +31,14 @@ export default function Visualizer({ dispatch, state }: { dispatch: React.Dispat
         }
         case Algorithm.MERGE_SORT: {
           setAnimations(mergeSort(state.array));
+          break;
+        }
+        case Algorithm.SELECTION_SORT: {
+          setAnimations(selectionSort(state.array));
+          break;
+        }
+        case Algorithm.INSERTION_SORT: {
+          setAnimations(insertionSort(state.array));
           break;
         }
         default: {

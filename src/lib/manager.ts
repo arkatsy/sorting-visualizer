@@ -12,6 +12,8 @@ export enum Algorithm {
   BUBBLE_SORT = "Bubble Sort",
   HEAP_SORT = "Heap Sort",
   MERGE_SORT = "Merge Sort",
+  SELECTION_SORT = "Selection Sort",
+  INSERTION_SORT = "Insertion Sort",
 }
 
 export type Status = "IDLE" | "SORTING";
