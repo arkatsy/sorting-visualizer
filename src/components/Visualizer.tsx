@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Action, Actions, Algorithm, State } from "../lib/manager";
 import { bubbleSort } from "../algorithms/bubbleSort";
 import { heapSort } from "../algorithms/heapSort";
+import { mergeSort } from "../algorithms/mergeSort";
 
 const COLORS = {
   RED: "#ff3f43",
@@ -10,7 +11,7 @@ const COLORS = {
 };
 
 export default function Visualizer({ dispatch, state }: { dispatch: React.Dispatch<Actions>; state: State }) {
-  const [animations, setAnimations] = useState<ReturnType<typeof bubbleSort> | null>(null);
+  const [animations, setAnimations] = useState<ReturnType<typeof bubbleSort | typeof mergeSort> | null>(null);
 
   const animationSpeed =
     state.array.length > 10 ? 250 / state.array.length : state.array.length >= 7 ? 110 : 200;
@@ -26,6 +27,10 @@ export default function Visualizer({ dispatch, state }: { dispatch: React.Dispat
           setAnimations(heapSort(state.array));
           break;
         }
+        case Algorithm.MERGE_SORT: {
+          setAnimations(mergeSort(state.array));
+          break;
+        }
         default: {
           break;
         }
@@ -35,42 +40,73 @@ export default function Visualizer({ dispatch, state }: { dispatch: React.Dispat
 
   useEffect(() => {
     if (animations) {
-      let i = 0;
-      for (const animation of animations) {
-        const type = animation.type;
-        const [idx1, idx2] = animation.payload;
-        const arrayBars = document.getElementsByClassName("arrayBars") as HTMLCollectionOf<HTMLElement>;
-        const bar1 = arrayBars[idx1];
-        const bar2 = arrayBars[idx2];
-
-        if (type === "comparison") {
+      if (state.algorithm === Algorithm.MERGE_SORT) {
+        let i = 0;
+        for (const animation of animations) {
+          const type = animation.type;
+          const [val1, val2] = animation.payload;
+          const arrayBars = document.getElementsByClassName("arrayBars") as HTMLCollectionOf<HTMLElement>;
+          const bar1 = arrayBars[val1];
+          if (type === "comparison") {
+            setTimeout(() => {
+              bar1.style.backgroundColor = COLORS.RED;
+            }, ++i * animationSpeed);
+          }
+          if (type === "override") {
+            setTimeout(() => {
+              bar1.style.backgroundColor = COLORS.GREEN;
+              bar1.style.height = `${val2}px`;
+            }, ++i * animationSpeed);
+          }
           setTimeout(() => {
-            bar1.style.backgroundColor = COLORS.RED;
-            bar2.style.backgroundColor = COLORS.RED;
-          }, ++i * animationSpeed);
-        }
-
-        if (type === "swap") {
-          setTimeout(() => {
-            bar1.style.backgroundColor = COLORS.GREEN;
-            bar2.style.backgroundColor = COLORS.GREEN;
-            const temp = bar1.style.height;
-            bar1.style.height = bar2.style.height;
-            bar2.style.height = temp;
+            bar1.style.backgroundColor = COLORS.GREY;
           }, ++i * animationSpeed);
         }
         setTimeout(() => {
-          bar1.style.backgroundColor = COLORS.GREY;
-          bar2.style.backgroundColor = COLORS.GREY;
+          dispatch({
+            type: Action.SET_STATUS,
+            payload: "IDLE",
+          });
+          setAnimations(null);
+        }, ++i * animationSpeed);
+      } else {
+        let i = 0;
+        for (const animation of animations) {
+          const type = animation.type;
+          const [idx1, idx2] = animation.payload;
+          const arrayBars = document.getElementsByClassName("arrayBars") as HTMLCollectionOf<HTMLElement>;
+          const bar1 = arrayBars[idx1];
+          const bar2 = arrayBars[idx2];
+
+          if (type === "comparison") {
+            setTimeout(() => {
+              bar1.style.backgroundColor = COLORS.RED;
+              bar2.style.backgroundColor = COLORS.RED;
+            }, ++i * animationSpeed);
+          }
+
+          if (type === "swap") {
+            setTimeout(() => {
+              bar1.style.backgroundColor = COLORS.GREEN;
+              bar2.style.backgroundColor = COLORS.GREEN;
+              const temp = bar1.style.height;
+              bar1.style.height = bar2.style.height;
+              bar2.style.height = temp;
+            }, ++i * animationSpeed);
+          }
+          setTimeout(() => {
+            bar1.style.backgroundColor = COLORS.GREY;
+            bar2.style.backgroundColor = COLORS.GREY;
+          }, ++i * animationSpeed);
+        }
+        setTimeout(() => {
+          dispatch({
+            type: Action.SET_STATUS,
+            payload: "IDLE",
+          });
+          setAnimations(null);
         }, ++i * animationSpeed);
       }
-      setTimeout(() => {
-        dispatch({
-          type: Action.SET_STATUS,
-          payload: "IDLE",
-        });
-        setAnimations(null);
-      }, ++i * animationSpeed);
     }
   }, [animations]);
 
