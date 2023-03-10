@@ -1,7 +1,6 @@
-export function* quickSort(array: Array<number>): Generator<{
-  type: "swap" | "comparison";
-  payload: [number, number];
-}> {
+import { ComparisonSwapAnimation, swap } from "./shared";
+
+export function* quickSort(array: Array<number>): Generator<ComparisonSwapAnimation> {
   yield* quickSortHelper(array, 0, array.length - 1);
   return array;
 }
@@ -43,10 +42,4 @@ function* quickSortHelper(
     yield* quickSortHelper(array, rightIdx + 1, endIdx);
     yield* quickSortHelper(array, startIdx, rightIdx - 1);
   }
-}
-
-function swap(i: number, j: number, array: Array<number>) {
-  const temp = array[j];
-  array[j] = array[i];
-  array[i] = temp;
 }

@@ -1,7 +1,6 @@
-export function* selectionSort(array: Array<number>): Generator<{
-  type: "swap" | "comparison";
-  payload: [number, number];
-}> {
+import { ComparisonSwapAnimation, swap } from "./shared";
+
+export function* selectionSort(array: Array<number>): Generator<ComparisonSwapAnimation> {
   let currentIdx = 0;
   while (currentIdx < array.length - 1) {
     let smallestIdx = currentIdx;
@@ -12,14 +11,7 @@ export function* selectionSort(array: Array<number>): Generator<{
       }
     }
     yield { type: "swap", payload: [currentIdx, smallestIdx] };
-    swap(currentIdx, smallestIdx, array);
-    currentIdx++;
+    swap(currentIdx++, smallestIdx, array);
   }
   return array;
-}
-
-function swap(i: number, j: number, array: Array<number>) {
-  const temp = array[j];
-  array[j] = array[i];
-  array[i] = temp;
 }

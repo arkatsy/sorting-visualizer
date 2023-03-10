@@ -1,6 +1,6 @@
 export function InputRange({
   label = "",
-  value = 25,
+  value = 50,
   onChange = () => {},
   ...props
 }: {

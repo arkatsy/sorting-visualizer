@@ -1,11 +1,7 @@
 import { useEffect, useState } from "react";
 import { Action, Actions, Algorithm, State } from "../lib/manager";
-import { bubbleSort } from "../algorithms/bubbleSort";
-import { heapSort } from "../algorithms/heapSort";
-import { mergeSort } from "../algorithms/mergeSort";
-import { selectionSort } from "../algorithms/selectionSort";
-import { insertionSort } from "../algorithms/insertionSort";
-import { quickSort } from "../algorithms/quickSort";
+import { bubbleSort, mergeSort, heapSort, quickSort, insertionSort, selectionSort } from "../algorithms/";
+import { ComparisonOverrideAnimation, ComparisonSwapAnimation } from "../algorithms/shared";
 
 const COLORS = {
   RED: "#f38ba8",
@@ -13,8 +9,10 @@ const COLORS = {
   GREY: "#585b70",
 };
 
+type Animations = Generator<ComparisonSwapAnimation> | Generator<ComparisonOverrideAnimation> | null;
+
 export default function Visualizer({ dispatch, state }: { dispatch: React.Dispatch<Actions>; state: State }) {
-  const [animations, setAnimations] = useState<ReturnType<typeof bubbleSort | typeof mergeSort> | null>(null);
+  const [animations, setAnimations] = useState<Animations | null>(null);
 
   const animationSpeed =
     state.array.length > 10 ? 250 / state.array.length : state.array.length >= 7 ? 110 : 200;

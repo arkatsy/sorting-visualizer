@@ -2,7 +2,7 @@ import React from "react";
 import { AlgorithmOptions } from "./AlgorithmOptions";
 import { InputRange } from "./InputRange";
 import { Action, Actions, State } from "../lib/manager";
-import { ArrayBarsIcon, RandomizeIcon, StartIcon, StopIcon } from "./Icons";
+import { ArrayBarsIcon, RandomizeIcon, StartIcon } from "./Icons";
 
 export default function Settings({ state, dispatch }: { state: State; dispatch: React.Dispatch<Actions> }) {
   const shouldDisable = state.status === "SORTING";
@@ -27,7 +27,9 @@ export default function Settings({ state, dispatch }: { state: State; dispatch: 
           label={
             <div className="flex gap-1">
               <ArrayBarsIcon />
-              <span>Array Size: {state.array.length}</span>
+              <span>
+                Array Size: <b className="text-[#a6e3a1]">{state.array.length}</b>
+              </span>
             </div>
           }
           value={state.array.length}

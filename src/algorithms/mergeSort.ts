@@ -1,7 +1,6 @@
-export function* mergeSort(array: Array<number>): Generator<{
-  type: "comparison" | "override";
-  payload: [number, number];
-}> {
+import { ComparisonOverrideAnimation } from "./shared";
+
+export function* mergeSort(array: Array<number>): Generator<ComparisonOverrideAnimation> {
   if (array.length <= 1) return array;
 
   const auxiliaryArray = array.slice();
@@ -13,10 +12,7 @@ function* mergeSortHelper(
   startIdx: number,
   endIdx: number,
   auxiliaryArray: Array<number>
-): Generator<{
-  type: "comparison" | "override";
-  payload: [number, number];
-}> {
+): Generator<ComparisonOverrideAnimation> {
   if (startIdx === endIdx) return;
 
   const middleIdx = Math.floor((startIdx + endIdx) / 2);
