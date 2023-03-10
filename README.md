@@ -1,6 +1,6 @@
 # Sorting Algorithms Visualizations
 
-Implemented Algorithms: 
+Implemented Algorithms:
 
 - Bubble Sort
 - Heap Sort
@@ -9,5 +9,8 @@ Implemented Algorithms:
 - Insertion Sort
 - Quick Sort
 
-
 You can view the live website here: https://sorting-algorithms-visualizations.vercel.app/
+
+Preview:
+
+![Alt text](/Preview.png?raw=true)
