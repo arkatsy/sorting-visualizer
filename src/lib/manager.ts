@@ -14,6 +14,7 @@ export enum Algorithm {
   MERGE_SORT = "Merge Sort",
   SELECTION_SORT = "Selection Sort",
   INSERTION_SORT = "Insertion Sort",
+  QUICK_SORT = "Quick Sort",
 }
 
 export type Status = "IDLE" | "SORTING";

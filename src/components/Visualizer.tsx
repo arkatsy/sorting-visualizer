@@ -5,6 +5,7 @@ import { heapSort } from "../algorithms/heapSort";
 import { mergeSort } from "../algorithms/mergeSort";
 import { selectionSort } from "../algorithms/selectionSort";
 import { insertionSort } from "../algorithms/insertionSort";
+import { quickSort } from "../algorithms/quickSort";
 
 const COLORS = {
   RED: "#ff3f43",
@@ -40,6 +41,9 @@ export default function Visualizer({ dispatch, state }: { dispatch: React.Dispat
         case Algorithm.INSERTION_SORT: {
           setAnimations(insertionSort(state.array));
           break;
+        }
+        case Algorithm.QUICK_SORT: {
+          setAnimations(quickSort(state.array));
         }
         default: {
           break;
