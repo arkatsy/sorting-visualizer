@@ -8,9 +8,9 @@ import { insertionSort } from "../algorithms/insertionSort";
 import { quickSort } from "../algorithms/quickSort";
 
 const COLORS = {
-  RED: "#ff3f43",
-  GREEN: "#1f8045",
-  GREY: "#5b616b",
+  RED: "#f38ba8",
+  GREEN: "#a6e3a1	",
+  GREY: "#585b70",
 };
 
 export default function Visualizer({ dispatch, state }: { dispatch: React.Dispatch<Actions>; state: State }) {
@@ -126,12 +126,13 @@ export default function Visualizer({ dispatch, state }: { dispatch: React.Dispat
 
   return (
     <VisualizerLayout>
-      <main className=" my-4 lg:my-10 flex items-end justify-center max-w-[1920px]">
+      <main className=" my-4 lg:my-10 flex items-end justify-center">
         {state.array.map((value, index) => (
           <div
-            className="arrayBars relative bg-[#5b616b] border border-[#292b2f] flex items-center justify-center text-white w-full rounded-md"
+            className={`arrayBars relative mx-[2px] flex items-center justify-center w-full rounded-lg`}
             style={{
               height: `${value}px`,
+              backgroundColor: COLORS.GREY,
             }}
             key={index}
           />
@@ -143,7 +144,7 @@ export default function Visualizer({ dispatch, state }: { dispatch: React.Dispat
 
 function VisualizerLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="bg-[#292b2f] w-full text-white flex justify-center">
+    <div className="w-full text-white flex justify-center">
       <div className="max-w-[1920px] w-full px-6 lg:px-8 xl:lg-10 absolute bottom-0">{children}</div>
     </div>
   );

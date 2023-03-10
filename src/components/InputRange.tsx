@@ -13,11 +13,11 @@ export function InputRange({
       <label className="text-sm">{label}</label>
       <input
         type="range"
-        min={5}
-        max={50}
+        min={10}
+        max={100}
         value={value}
         onChange={onChange}
-        className="w-full accent-[#5865f2]"
+        className="w-full accent-[#89b4fa]"
         {...props}
       />
     </div>

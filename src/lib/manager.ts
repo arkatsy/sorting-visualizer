@@ -2,7 +2,7 @@ import React from "react";
 
 const MIN = 10;
 const MAX = 640;
-const INITIAL_SIZE = 20;
+const INITIAL_SIZE = 50;
 
 export function generateRandomArray(size: number, min: number, max: number) {
   return Array.from({ length: size }, () => Math.floor(Math.random() * (max - min + 1) + min));
