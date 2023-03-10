@@ -1,7 +1,6 @@
-export function* insertionSort(array: Array<number>): Generator<{
-  type: "comparison" | "swap";
-  payload: [number, number];
-}> {
+import { type ComparisonSwapAnimation, swap } from "./shared";
+
+export function* insertionSort(array: Array<number>): ComparisonSwapAnimation {
   for (let i = 0; i < array.length; i++) {
     let j = i;
     yield { type: "comparison", payload: [j, j - 1] };
@@ -11,10 +10,4 @@ export function* insertionSort(array: Array<number>): Generator<{
       j--;
     }
   }
-}
-
-function swap(i: number, j: number, array: Array<number>) {
-  const temp = array[j];
-  array[j] = array[i];
-  array[i] = temp;
 }

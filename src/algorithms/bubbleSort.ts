@@ -1,6 +1,6 @@
-import { ComparisonSwapAnimation } from "./shared";
+import { type ComparisonSwapAnimation, swap } from "./shared";
 
-export function* bubbleSort(array: Array<number>): Generator<ComparisonSwapAnimation> {
+export function* bubbleSort(array: Array<number>): ComparisonSwapAnimation {
   const length = array.length;
 
   for (let i = 0; i < length; i++) {
@@ -8,9 +8,7 @@ export function* bubbleSort(array: Array<number>): Generator<ComparisonSwapAnima
       yield { type: "comparison", payload: [j, j + 1] };
       if (array[j] > array[j + 1]) {
         yield { type: "swap", payload: [j, j + 1] };
-        const temp = array[j];
-        array[j] = array[j + 1];
-        array[j + 1] = temp;
+        swap(j, j + 1, array);
       }
     }
   }

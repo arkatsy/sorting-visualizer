@@ -1,6 +1,6 @@
-import { ComparisonSwapAnimation, swap } from "./shared";
+import { type ComparisonSwapAnimation, swap } from "./shared";
 
-export function* heapSort(array: Array<number>): Generator<ComparisonSwapAnimation> {
+export function* heapSort(array: Array<number>): ComparisonSwapAnimation {
   yield* buildMaxHeap(array);
   for (let endIdx = array.length - 1; endIdx >= 1; endIdx--) {
     yield { type: "swap", payload: [0, endIdx] };
@@ -10,18 +10,14 @@ export function* heapSort(array: Array<number>): Generator<ComparisonSwapAnimati
   return array;
 }
 
-function* buildMaxHeap(array: Array<number>): Generator<ComparisonSwapAnimation> {
+function* buildMaxHeap(array: Array<number>): ComparisonSwapAnimation {
   let lastParentIdx = getParentIdx(array.length);
   for (let currentIdx = lastParentIdx; currentIdx >= 0; currentIdx--) {
     yield* siftDown(currentIdx, array.length - 1, array);
   }
 }
 
-function* siftDown(
-  currentIdx: number,
-  endIdx: number,
-  array: Array<number>
-): Generator<ComparisonSwapAnimation> {
+function* siftDown(currentIdx: number, endIdx: number, array: Array<number>): ComparisonSwapAnimation {
   let childLeftIdx = getLeftChildIdx(currentIdx);
   while (childLeftIdx <= endIdx) {
     let childRightIdx = getRightChildIdx(currentIdx) <= endIdx ? getRightChildIdx(currentIdx) : null;

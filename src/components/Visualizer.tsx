@@ -5,14 +5,14 @@ import { ComparisonOverrideAnimation, ComparisonSwapAnimation } from "../algorit
 
 const COLORS = {
   RED: "#f38ba8",
-  GREEN: "#a6e3a1	",
+  GREEN: "#a6e3a1",
   GREY: "#585b70",
 };
 
-type Animations = Generator<ComparisonSwapAnimation> | Generator<ComparisonOverrideAnimation> | null;
-
 export default function Visualizer({ dispatch, state }: { dispatch: React.Dispatch<Actions>; state: State }) {
-  const [animations, setAnimations] = useState<Animations | null>(null);
+  const [animations, setAnimations] = useState<ComparisonOverrideAnimation | ComparisonSwapAnimation | null>(
+    null
+  );
 
   const animationSpeed =
     state.array.length > 10 ? 250 / state.array.length : state.array.length >= 7 ? 110 : 200;
@@ -52,12 +52,12 @@ export default function Visualizer({ dispatch, state }: { dispatch: React.Dispat
 
   useEffect(() => {
     if (animations) {
+      let i = 0;
+      const arrayBars = document.getElementsByClassName("arrayBars") as HTMLCollectionOf<HTMLElement>;
       if (state.algorithm === Algorithm.MERGE_SORT) {
-        let i = 0;
         for (const animation of animations) {
           const type = animation.type;
           const [val1, val2] = animation.payload;
-          const arrayBars = document.getElementsByClassName("arrayBars") as HTMLCollectionOf<HTMLElement>;
           const bar1 = arrayBars[val1];
           if (type === "comparison") {
             setTimeout(() => {
@@ -74,19 +74,10 @@ export default function Visualizer({ dispatch, state }: { dispatch: React.Dispat
             bar1.style.backgroundColor = COLORS.GREY;
           }, ++i * animationSpeed);
         }
-        setTimeout(() => {
-          dispatch({
-            type: Action.SET_STATUS,
-            payload: "IDLE",
-          });
-          setAnimations(null);
-        }, ++i * animationSpeed);
       } else {
-        let i = 0;
         for (const animation of animations) {
           const type = animation.type;
           const [idx1, idx2] = animation.payload;
-          const arrayBars = document.getElementsByClassName("arrayBars") as HTMLCollectionOf<HTMLElement>;
           const bar1 = arrayBars[idx1];
           const bar2 = arrayBars[idx2];
 
@@ -111,14 +102,14 @@ export default function Visualizer({ dispatch, state }: { dispatch: React.Dispat
             bar2.style.backgroundColor = COLORS.GREY;
           }, ++i * animationSpeed);
         }
-        setTimeout(() => {
-          dispatch({
-            type: Action.SET_STATUS,
-            payload: "IDLE",
-          });
-          setAnimations(null);
-        }, ++i * animationSpeed);
       }
+      setTimeout(() => {
+        dispatch({
+          type: Action.SET_STATUS,
+          payload: "IDLE",
+        });
+        setAnimations(null);
+      }, ++i * animationSpeed);
     }
   }, [animations]);
 
