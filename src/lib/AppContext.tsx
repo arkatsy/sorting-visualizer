@@ -96,7 +96,7 @@ const reducer: Reducer<State, Actions> = (state, action) => {
   }
 };
 
-export const AppContext = createContext<AppContextType>({} as AppContextType);
+export const AppContext = createContext<AppContextType | null>(null);
 
 export function GlobalContext({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
