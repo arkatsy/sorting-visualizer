@@ -1,4 +1,4 @@
-# Sorting Algorithms Visualizations
+# Sorting Visualizer
 
 Implemented Algorithms:
 
@@ -8,9 +8,3 @@ Implemented Algorithms:
 - Selection Sort
 - Insertion Sort
 - Quick Sort
-
-You can view the live website here: https://sorting-algorithms-visualizations.vercel.app/
-
-Preview:
-
-![Alt text](/Preview.png?raw=true)

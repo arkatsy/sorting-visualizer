@@ -1,101 +1,156 @@
-import React from "react";
-import { AlgorithmOptions } from "./AlgorithmOptions";
-import { InputRange } from "./InputRange";
-import { Action, Actions, State } from "../lib/manager";
-import { ArrayBarsIcon, RandomizeIcon, StartIcon } from "./Icons";
+import React, { useContext, type ChangeEvent, useEffect } from "react";
+import { ArrayBarsIcon, RandomizeIcon } from "./Icons";
+import { Listbox, Transition } from "@headlessui/react";
+import { Fragment } from "react";
+import { ArrowDownIcon, SortingIcon } from "./Icons";
+import { useArray } from "../lib/useArray";
+import { useAlgorithm } from "../lib/useAlgorithm";
+import { useStatus } from "../lib/useStatus";
+import { Algorithm, UIStatus, type AlgorithmType } from "../lib/AppContext";
+import { INITIAL_SIZE, MAX, MIN } from "../lib/shared";
 
-export default function Settings({ state, dispatch }: { state: State; dispatch: React.Dispatch<Actions> }) {
-  const shouldDisable = state.status === "SORTING";
+export function Settings() {
+  const {array, newArray, setSize} = useArray();
+  const [status, setStatus] = useStatus();
+  const [algorithm, setAlgorithm] = useAlgorithm();
+
+  const arraySizeChangeHandler = (e: ChangeEvent<HTMLInputElement>) => setSize(Number(e.target.value));
+  const sortButtonClickHandler = (e: React.MouseEvent) => setStatus(UIStatus.SORTING);
+
+  const shouldDisableSettings = status === UIStatus.SORTING;
+
   return (
-    <HeaderLayout>
-      <div className="flex gap-8 w-full justify-center">
-        <div className="group relative">
-          <Button
-            label={
-              <div className="flex gap-2">
-                <span className="order-2">Randomize Array</span>
-                <RandomizeIcon />
-              </div>
-            }
-            onClick={() => {
-              dispatch({ type: Action.NEW_ARRAY });
-            }}
-            disabled={shouldDisable}
-          />
-        </div>
-        <InputRange
-          label={
-            <div className="flex gap-1">
-              <ArrayBarsIcon />
-              <span>
-                Array Size: <b className="text-[#a6e3a1]">{state.array.length}</b>
-              </span>
-            </div>
-          }
-          value={state.array.length}
-          onChange={(e) => {
-            dispatch({
-              type: Action.SET_SIZE,
-              payload: Number(e.target.value),
-            });
-          }}
-          disabled={shouldDisable}
-        />
-        <AlgorithmOptions
-          selectedOption={state.algorithm}
-          onChange={(value) => {
-            dispatch({
-              type: Action.SET_ALGORITHM,
-              payload: value,
-            });
-          }}
-          disabled={shouldDisable}
-        />
-        <Button
-          label={
+    <div id="settings" className="relative z-20">
+      <div className="h-20 bg-stone-900">
+        <div className="flex items-center h-full px-4 md:px-6 gap-4 justify-center">
+          {/* Randomizer Button (new array) */}
+          <Button disabled={shouldDisableSettings} onClick={newArray}>
             <div className="flex gap-2">
-              <StartIcon />
-              <span>Sort</span>
+              <span className="order-2">Randomize Array</span>
+              <RandomizeIcon />
             </div>
-          }
-          onClick={() => {
-            dispatch({
-              type: Action.SET_STATUS,
-              payload: "SORTING",
-            });
-          }}
-          disabled={shouldDisable}
-        />
-      </div>
-    </HeaderLayout>
-  );
-}
+          </Button>
 
-function HeaderLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="bg-slate-800 dark:bg-[#11111b] h-20 text-white flex justify-center">
-      <div className="max-w-[1920px] w-full px-4 lg:px-8 xl:lg-10 flex items-center">{children}</div>
+          {/* Input Range (array size) */}
+          <div>
+            <InputRange
+              disabled={shouldDisableSettings}
+              value={array.length}
+              onChange={arraySizeChangeHandler}
+            >
+              <div className="flex gap-1">
+                <ArrayBarsIcon />
+                <span>Array Size: {array.length}</span>
+              </div>
+            </InputRange>
+          </div>
+
+          {/* Algorithm Options */}
+          <AlgorithmListOptions
+            disabled={shouldDisableSettings}
+            onChange={setAlgorithm}
+            selectedOption={algorithm}
+          />
+
+          {/* Button (Begin Sorting - Stop) */}
+          <Button disabled={shouldDisableSettings} onClick={sortButtonClickHandler}>
+            Sort
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
 
-function Button({
-  label = "",
-  onClick = () => {},
-  ...props
-}: {
-  label?: string | React.ReactNode;
-  onClick?: React.MouseEventHandler;
-} & React.ButtonHTMLAttributes<HTMLButtonElement>) {
+type InputRangeProps = {
+  value?: number;
+  children: React.ReactNode;
+} & React.InputHTMLAttributes<HTMLInputElement>;
+
+export function InputRange({ value = INITIAL_SIZE, children, ...props }: InputRangeProps) {
+  return (
+    <div className="flex flex-col gap-1">
+      <label className="text-sm">{children}</label>
+      <input type="range" min={MIN} max={MAX} value={value} className="w-full accent-stone-500" {...props} />
+    </div>
+  );
+}
+
+type ButtonProps = {
+  children: React.ReactNode;
+} & React.ButtonHTMLAttributes<HTMLButtonElement>;
+
+function Button({ children, ...props }: ButtonProps) {
   return (
     <button
-      className="bg-[#313244] px-4 py-2 rounded-md hover:bg-[#45475a] select-none
-    focus:ring-2 focus:ring-[#89b4fa]
+      className="bg-stone-700 px-4 py-2 rounded-md hover:bg-stone-600 select-none
+    focus:ring-2 focus:ring-stone-500 focus:outline-none
     disabled:opacity-50 disabled:cursor-not-allowed"
-      onClick={onClick}
       {...props}
     >
-      {label}
+      {children}
     </button>
   );
+}
+
+type AlgorithmListOptionsProps = {
+  selectedOption: AlgorithmType;
+  disabled?: boolean;
+  onChange?: (newAlgo: AlgorithmType) => void;
+};
+
+export function AlgorithmListOptions({
+  selectedOption,
+  disabled = false,
+  onChange,
+}: AlgorithmListOptionsProps) {
+  return (
+    <Listbox as="div" value={selectedOption} className="relative" onChange={onChange} disabled={disabled}>
+      <Listbox.Button
+        className="bg-stone-700 px-4 py-2 rounded-md hover:bg-stone-600 select-none
+        focus:ring-2 focus:ring-stone:500 
+        disabled:opacity-50 disabled:cursor-not-allowed flex"
+      >
+        <div className="mr-2">
+          <SortingIcon />
+        </div>
+        <span className="w-52 flex gap-4">
+          <span className="font-bold">Algorithm: </span>
+          {beautifyAlgoNames(selectedOption)}
+        </span>
+        <div className="ml-2" aria-hidden="true">
+          <ArrowDownIcon />
+        </div>
+      </Listbox.Button>
+      <Transition
+        as={Fragment}
+        enter="transition ease-out duration-100"
+        enterFrom="opacity-50 scale-95"
+        enterTo="opacity-100 scale-100"
+        leave="transition ease-in duration-100"
+        leaveFrom="opacity-100 scale-100"
+        leaveTo="opacity-0 scale-95"
+      >
+        <Listbox.Options className="absolute mt-1 w-full bg-stone-600 rounded-md">
+          {Object.values(Algorithm).map((algorithm, idx) => (
+            <Listbox.Option
+              value={algorithm}
+              key={idx}
+              className={({ active }) =>
+                `cursor-pointer select-none py-2 px-4 rounded-md whitespace-nowrap ${
+                  active ? "bg-stone-500 text-stone-900" : ""
+                }`
+              }
+            >
+              {beautifyAlgoNames(algorithm)}
+            </Listbox.Option>
+          ))}
+        </Listbox.Options>
+      </Transition>
+    </Listbox>
+  );
+}
+
+function beautifyAlgoNames(algoName: AlgorithmType) {
+  return algoName.toLowerCase().split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 }
