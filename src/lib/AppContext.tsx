@@ -1,7 +1,7 @@
 import { useReducer } from "react";
 import { useMemo } from "react";
 import { createContext, type ReactNode, type Reducer } from "react";
-import { generateRandomArray, INITIAL_SIZE, MAX, MIN } from "./shared";
+import { generateRandomArray, INITIAL_LEN, MAX_ARRAY_SIZE, MIN_ARRAY_SIZE } from "./shared";
 
 export const UIStatus = {
   IDLE: "IDLE",
@@ -53,8 +53,8 @@ export type Actions =
 
 export const INITIAL_STATE: State = {
   status: UIStatus.IDLE,
-  algorithm: Algorithm.MERGE_SORT,
-  array: generateRandomArray(INITIAL_SIZE, MIN, MAX),
+  algorithm: Algorithm.BUBBLE_SORT,
+  array: generateRandomArray(INITIAL_LEN, MIN_ARRAY_SIZE, MAX_ARRAY_SIZE),
 };
 
 export type AppContextType = {
@@ -84,12 +84,12 @@ const reducer: Reducer<State, Actions> = (state, action) => {
     case Action.NEW_ARRAY:
       return {
         ...state,
-        array: generateRandomArray(state.array.length, MIN, MAX),
+        array: generateRandomArray(state.array.length, MIN_ARRAY_SIZE, MAX_ARRAY_SIZE),
       };
     case Action.SET_SIZE:
       return {
         ...state,
-        array: generateRandomArray(action.payload, MIN, MAX),
+        array: generateRandomArray(action.payload, MIN_ARRAY_SIZE, MAX_ARRAY_SIZE),
       };
     default:
       return state;

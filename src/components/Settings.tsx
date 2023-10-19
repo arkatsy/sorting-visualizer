@@ -7,7 +7,7 @@ import { useArray } from "../lib/useArray";
 import { useAlgorithm } from "../lib/useAlgorithm";
 import { useStatus } from "../lib/useStatus";
 import { Algorithm, UIStatus, type AlgorithmType } from "../lib/AppContext";
-import { INITIAL_SIZE, MAX, MIN } from "../lib/shared";
+import { INITIAL_LEN, MAX_ARRAY_LEN, MIN_ARRAY_LEN } from "../lib/shared";
 
 export function Settings() {
   const {array, newArray, setSize} = useArray();
@@ -67,11 +67,11 @@ type InputRangeProps = {
   children: React.ReactNode;
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
-export function InputRange({ value = INITIAL_SIZE, children, ...props }: InputRangeProps) {
+export function InputRange({ value = INITIAL_LEN, children, ...props }: InputRangeProps) {
   return (
     <div className="flex flex-col gap-1">
       <label className="text-sm">{children}</label>
-      <input type="range" min={MIN} max={MAX} value={value} className="w-full accent-stone-500" {...props} />
+      <input type="range" min={MIN_ARRAY_LEN} max={MAX_ARRAY_LEN} value={value} className="w-full accent-stone-500" {...props} />
     </div>
   );
 }

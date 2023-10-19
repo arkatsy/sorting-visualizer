@@ -1,44 +1,66 @@
-import { RefObject, useEffect, useRef } from "react";
-import { useClientRect } from "../lib/useClientRect";
+import { RefObject, useEffect, useRef, useState } from "react";
+// import { useClientRect } from "../lib/useClientRect";
 import { useStatus } from "../lib/useStatus";
-import { UIStatus } from "../lib/AppContext";
-import { useRequestAnimationFrame } from "../lib/useAnimationFrame";
+import { Algorithm, UIStatus } from "../lib/AppContext";
+// import { useRequestAnimationFrame } from "../lib/useAnimationFrame";
+import { useAlgorithm } from "../lib/useAlgorithm";
+import type { ComparisonOverrideAnimation, ComparisonSwapAnimation } from "../algorithms/shared";
+import { bubbleSort, heapSort, insertionSort, mergeSort, quickSort, selectionSort } from "../algorithms";
+import { useArray } from "../lib/useArray";
+
+type AnimationGenerator = ComparisonOverrideAnimation | ComparisonSwapAnimation;
 
 export function Visualizer() {
-  const [status] = useStatus();
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [status, setStatus] = useStatus();
+  const [algorithm] = useAlgorithm();
+  const { array } = useArray();
+  const [generator, setGenerator] = useState<AnimationGenerator | null>(null);
 
-  const [parentRef, parentRect] = useClientRect<HTMLDivElement>();
   const shouldAnimate = status === UIStatus.SORTING;
+  const enableSettings = () => setStatus(UIStatus.IDLE);
 
   useEffect(() => {
-    const [canvas] = getCanvas(canvasRef);
-    if (!parentRect) return;
-    canvas.width = parentRect.width;
-    canvas.height = parentRect.height;
-  }, [parentRect]);
+    if (shouldAnimate) {
+      switch (algorithm) {
+        case Algorithm.BUBBLE_SORT:
+          setGenerator(bubbleSort(array));
+          break;
+        case Algorithm.HEAP_SORT:
+          setGenerator(heapSort(array));
+          break;
+        case Algorithm.MERGE_SORT:
+          setGenerator(mergeSort(array));
+          break;
+        case Algorithm.INSERTION_SORT:
+          setGenerator(insertionSort(array));
+          break;
+        case Algorithm.QUICK_SORT:
+          setGenerator(quickSort(array));
+          break;
+        case Algorithm.SELECTION_SORT:
+          setGenerator(selectionSort(array));
+          break;
+        default:
+          console.warn("Unknown algorithm");
+          break;
+      }
+    }
+  }, [shouldAnimate]);
 
-  useRequestAnimationFrame((deltaTime) => {
-    const [canvas, ctx] = getCanvas(canvasRef);
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    console.log("animate");
-  }, shouldAnimate);
 
   return (
     <div id="visualizer" className="relative z-10 h-full">
-      <div className="bg-stone-800 h-full" ref={parentRef}>
-        <canvas id="canvas-visualization" ref={canvasRef}></canvas>
+      <div className="bg-stone-800 px-4 flex items-end gap-1 h-[84%]">
+          {array.map((value, index) => (
+            <div
+              className={`relative w-full rounded-lg bg-stone-700`}
+              style={{
+                height: `${value}px`,
+              }}
+              key={index}
+            />
+          ))}
       </div>
     </div>
   );
-}
-
-function getCanvas(canvasRef: RefObject<HTMLCanvasElement>) {
-  if (!canvasRef.current) {
-    throw new Error("Canvas Not Found. `canvasRef.current` is null");
-  }
-  const ctx = canvasRef.current.getContext("2d");
-  if (!ctx) throw new Error("2d Context Not Found");
-  return [canvasRef.current, ctx] as const;
 }
