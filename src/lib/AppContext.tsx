@@ -53,7 +53,7 @@ export type Actions =
 
 export const INITIAL_STATE: State = {
   status: UIStatus.IDLE,
-  algorithm: Algorithm.BUBBLE_SORT,
+  algorithm: Algorithm.MERGE_SORT,
   array: generateRandomArray(INITIAL_LEN, MIN_ARRAY_SIZE, MAX_ARRAY_SIZE),
 };
 

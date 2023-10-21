@@ -1,6 +1,6 @@
-import { type ComparisonSwapAnimation, swap } from "./shared";
+import { type SwapAnimationsGenerator, swap } from "./shared";
 
-export function* quickSort(array: Array<number>): ComparisonSwapAnimation {
+export function* quickSort(array: Array<number>): SwapAnimationsGenerator {
   yield* quickSortHelper(array, 0, array.length - 1);
   return array;
 }

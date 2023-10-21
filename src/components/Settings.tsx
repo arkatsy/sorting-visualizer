@@ -1,4 +1,4 @@
-import React, { useContext, type ChangeEvent, useEffect } from "react";
+import type { ReactNode, ButtonHTMLAttributes, InputHTMLAttributes, ChangeEvent } from "react";
 import { ArrayBarsIcon, RandomizeIcon } from "./Icons";
 import { Listbox, Transition } from "@headlessui/react";
 import { Fragment } from "react";
@@ -10,7 +10,7 @@ import { Algorithm, UIStatus, type AlgorithmType } from "../lib/AppContext";
 import { INITIAL_LEN, MAX_ARRAY_LEN, MIN_ARRAY_LEN } from "../lib/shared";
 
 export function Settings() {
-  const {array, newArray, setSize} = useArray();
+  const { array, newArray, setSize } = useArray();
   const [status, setStatus] = useStatus();
   const [algorithm, setAlgorithm] = useAlgorithm();
 
@@ -20,13 +20,13 @@ export function Settings() {
   const shouldDisableSettings = status === UIStatus.SORTING;
 
   return (
-    <div id="settings" className="relative z-20">
-      <div className="h-20 bg-stone-900">
-        <div className="flex items-center h-full px-4 md:px-6 gap-4 justify-center">
+    <div id="settings" className="relative z-20 font-semibold">
+      <div className="h-20 bg-zinc-900">
+        <div className="flex items-center h-full px-4 md:px-6 gap-6 justify-center">
           {/* Randomizer Button (new array) */}
           <Button disabled={shouldDisableSettings} onClick={newArray}>
             <div className="flex gap-2">
-              <span className="order-2">Randomize Array</span>
+              <span className="order-2">Randomize</span>
               <RandomizeIcon />
             </div>
           </Button>
@@ -40,7 +40,24 @@ export function Settings() {
             >
               <div className="flex gap-1">
                 <ArrayBarsIcon />
-                <span>Array Size: {array.length}</span>
+                <span>
+                  Array Size:{" "}
+                  <span
+                    className={`${
+                      array.length < 50
+                        ? "text-green-500"
+                        : array.length < 85
+                        ? "text-yellow-500"
+                        : array.length < 150
+                        ? "text-orange-500"
+                        : array.length < 200
+                        ? "text-red-400"
+                        : "text-red-500"
+                    }`}
+                  >
+                    {array.length}
+                  </span>
+                </span>
               </div>
             </InputRange>
           </div>
@@ -64,27 +81,34 @@ export function Settings() {
 
 type InputRangeProps = {
   value?: number;
-  children: React.ReactNode;
-} & React.InputHTMLAttributes<HTMLInputElement>;
+  children: ReactNode;
+} & InputHTMLAttributes<HTMLInputElement>;
 
 export function InputRange({ value = INITIAL_LEN, children, ...props }: InputRangeProps) {
   return (
     <div className="flex flex-col gap-1">
       <label className="text-sm">{children}</label>
-      <input type="range" min={MIN_ARRAY_LEN} max={MAX_ARRAY_LEN} value={value} className="w-full accent-stone-500" {...props} />
+      <input
+        type="range"
+        min={MIN_ARRAY_LEN}
+        max={MAX_ARRAY_LEN}
+        value={value}
+        className={`w-full accent-zinc-400`}
+        {...props}
+      />
     </div>
   );
 }
 
 type ButtonProps = {
-  children: React.ReactNode;
-} & React.ButtonHTMLAttributes<HTMLButtonElement>;
+  children: ReactNode;
+} & ButtonHTMLAttributes<HTMLButtonElement>;
 
 function Button({ children, ...props }: ButtonProps) {
   return (
     <button
-      className="bg-stone-700 px-4 py-2 rounded-md hover:bg-stone-600 select-none
-    focus:ring-2 focus:ring-stone-500 focus:outline-none
+      className="bg-zinc-700 px-4 py-2 rounded-md hover:bg-zinc-600 select-none
+    focus:ring-2 focus:ring-zinc-400 focus:outline-none
     disabled:opacity-50 disabled:cursor-not-allowed"
       {...props}
     >
@@ -107,8 +131,8 @@ export function AlgorithmListOptions({
   return (
     <Listbox as="div" value={selectedOption} className="relative" onChange={onChange} disabled={disabled}>
       <Listbox.Button
-        className="bg-stone-700 px-4 py-2 rounded-md hover:bg-stone-600 select-none
-        focus:ring-2 focus:ring-stone:500 
+        className="bg-zinc-700 px-4 py-2 rounded-md hover:bg-zinc-600 select-none
+        focus:ring-2 focus:ring-zinc-400 focus:outline-none
         disabled:opacity-50 disabled:cursor-not-allowed flex"
       >
         <div className="mr-2">
@@ -131,14 +155,14 @@ export function AlgorithmListOptions({
         leaveFrom="opacity-100 scale-100"
         leaveTo="opacity-0 scale-95"
       >
-        <Listbox.Options className="absolute mt-1 w-full bg-stone-600 rounded-md">
+        <Listbox.Options className="absolute mt-1 w-full bg-zinc-700 rounded-md">
           {Object.values(Algorithm).map((algorithm, idx) => (
             <Listbox.Option
               value={algorithm}
               key={idx}
               className={({ active }) =>
                 `cursor-pointer select-none py-2 px-4 rounded-md whitespace-nowrap ${
-                  active ? "bg-stone-500 text-stone-900" : ""
+                  active ? "bg-zinc-600" : ""
                 }`
               }
             >
@@ -152,5 +176,9 @@ export function AlgorithmListOptions({
 }
 
 function beautifyAlgoNames(algoName: AlgorithmType) {
-  return algoName.toLowerCase().split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  return algoName
+    .toLowerCase()
+    .split("_")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 }

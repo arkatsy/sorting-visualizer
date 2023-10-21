@@ -1,6 +1,6 @@
-import { type ComparisonSwapAnimation, swap } from "./shared";
+import { type SwapAnimationsGenerator, swap } from "./shared";
 
-export function* bubbleSort(array: Array<number>): ComparisonSwapAnimation {
+export function* bubbleSort(array: Array<number>): SwapAnimationsGenerator {
   const length = array.length;
 
   for (let i = 0; i < length; i++) {

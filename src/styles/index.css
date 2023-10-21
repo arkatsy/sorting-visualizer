@@ -4,8 +4,7 @@
 
 @layer base {
   body {
-    @apply overflow-y-hidden bg-stone-800 text-white;
-    font-family: "Open Sans", sans-serif;
+    @apply overflow-y-hidden bg-zinc-800 text-white font-sans;
   }
 
   body, #root {
