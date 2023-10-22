@@ -1,7 +1,7 @@
 import type { ReactNode, ButtonHTMLAttributes, InputHTMLAttributes, ChangeEvent, MouseEvent } from "react";
 import { AnimationSpeedIcon, ArrayBarsIcon, RandomizeIcon } from "./Icons";
 import { Listbox, Transition } from "@headlessui/react";
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import { ArrowDownIcon, SortingIcon } from "./Icons";
 import { useArray } from "../lib/useArray";
 import { useAlgorithm } from "../lib/useAlgorithm";
@@ -44,7 +44,7 @@ export function Settings() {
               value={array.length}
               onChange={arraySizeChangeHandler}
             >
-              <div className="flex gap-1">
+              <div className="flex gap-2">
                 <ArrayBarsIcon />
                 <span>
                   Array Size:{" "}
@@ -81,10 +81,13 @@ export function Settings() {
             min={SORT_FAST_SPEED_DELAY - 1}
             max={SORT_SLOW_SPEED_DELAY - 1}
             step={1}
-            defaultValue={speed}
+            defaultValue={SORT_SLOW_SPEED_DELAY - speed}
             onChange={animationSpeedChangeHandler}
           >
-            Sorting Speed
+            <div className="flex gap-2 items-center">
+              <AnimationSpeedIcon />
+              Sorting Speed
+            </div>
           </InputRange>
 
           {/* Button (Begin Sorting - Stop) */}
@@ -101,7 +104,7 @@ type InputRangeProps = {
   children: ReactNode;
 } & InputHTMLAttributes<HTMLInputElement>;
 
-export function InputRange({ children, ...props }: InputRangeProps) {
+function InputRange({ children, ...props }: InputRangeProps) {
   return (
     <div className="flex flex-col gap-1">
       <label className="text-sm">{children}</label>
@@ -133,7 +136,7 @@ type AlgorithmListOptionsProps = {
   onChange?: (newAlgo: AlgorithmType) => void;
 };
 
-export function AlgorithmListOptions({
+function AlgorithmListOptions({
   selectedOption,
   disabled = false,
   onChange,
