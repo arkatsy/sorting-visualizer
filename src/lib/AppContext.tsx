@@ -1,7 +1,6 @@
 import { useReducer } from "react";
-import { useMemo } from "react";
 import { createContext, type ReactNode, type Reducer } from "react";
-import { generateRandomArray, INITIAL_LEN, MAX_ARRAY_SIZE, MIN_ARRAY_SIZE } from "./shared";
+import { generateRandomArray, INITIAL_LEN, INITIAL_SORT_SPEED_DELAY, MAX_ARRAY_SIZE, MIN_ARRAY_SIZE, SORT_SLOW_SPEED_DELAY } from "./shared";
 
 export const UIStatus = {
   IDLE: "IDLE",
@@ -22,6 +21,7 @@ export const Action = {
   SET_ALGORITHM: "SET_ALGORITHM",
   NEW_ARRAY: "NEW_ARRAY",
   SET_SIZE: "SET_SIZE",
+  SET_SPEED: "SET_SPEED",
 } as const;
 
 export type UIStatusType = keyof typeof UIStatus;
@@ -32,6 +32,7 @@ export type State = {
   status: UIStatusType;
   algorithm: AlgorithmType;
   array: Array<number>;
+  speed: number;
 };
 
 export type Actions =
@@ -49,12 +50,18 @@ export type Actions =
   | {
       type: typeof Action.SET_SIZE;
       payload: number;
+    }
+  | {
+      type: typeof Action.SET_SPEED;
+      payload: number;
     };
 
 export const INITIAL_STATE: State = {
   status: UIStatus.IDLE,
   algorithm: Algorithm.MERGE_SORT,
   array: generateRandomArray(INITIAL_LEN, MIN_ARRAY_SIZE, MAX_ARRAY_SIZE),
+  // speed: INITIAL_SPEED,
+  speed: INITIAL_SORT_SPEED_DELAY
 };
 
 export type AppContextType = {
@@ -67,9 +74,12 @@ export type AppContextType = {
   array: Array<number>;
   newArray: () => void;
   setSize: (newSize: number) => void;
+
+  speed: number;
+  setSpeed: (newSpeed: number) => void;
 };
 
-const reducer: Reducer<State, Actions> = (state, action) => {
+const globalStateReducer: Reducer<State, Actions> = (state, action) => {
   switch (action.type) {
     case Action.SET_STATUS:
       return {
@@ -91,6 +101,11 @@ const reducer: Reducer<State, Actions> = (state, action) => {
         ...state,
         array: generateRandomArray(action.payload, MIN_ARRAY_SIZE, MAX_ARRAY_SIZE),
       };
+    case Action.SET_SPEED:
+      return {
+        ...state,
+        speed: action.payload
+      };
     default:
       return state;
   }
@@ -99,20 +114,24 @@ const reducer: Reducer<State, Actions> = (state, action) => {
 export const AppContext = createContext<AppContextType | null>(null);
 
 export function GlobalContext({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
+  const [state, dispatch] = useReducer<typeof globalStateReducer>(globalStateReducer, INITIAL_STATE);
 
-  const value = useMemo(
-    () => ({
-      status: state.status,
-      setStatus: (newStatus: UIStatusType) => dispatch({ type: Action.SET_STATUS, payload: newStatus }),
-      algorithm: state.algorithm,
-      setAlgorithm: (newAlgo: AlgorithmType) => dispatch({ type: Action.SET_ALGORITHM, payload: newAlgo }),
-      array: state.array,
-      newArray: () => dispatch({ type: Action.NEW_ARRAY }),
-      setSize: (newSize: number) => dispatch({ type: Action.SET_SIZE, payload: newSize }),
-    }),
-    [state.status, state.array, state.algorithm]
+  return (
+    <AppContext.Provider
+      value={{
+        status: state.status,
+        setStatus: (newStatus: UIStatusType) => dispatch({ type: Action.SET_STATUS, payload: newStatus }),
+        algorithm: state.algorithm,
+        setAlgorithm: (newAlgo: AlgorithmType) => dispatch({ type: Action.SET_ALGORITHM, payload: newAlgo }),
+        array: state.array,
+        newArray: () => dispatch({ type: Action.NEW_ARRAY }),
+        setSize: (newSize: number) => dispatch({ type: Action.SET_SIZE, payload: newSize }),
+        speed: state.speed,
+        setSpeed: (newSpeed: number) =>
+          dispatch({ type: Action.SET_SPEED, payload: newSpeed}),
+      }}
+    >
+      {children}
+    </AppContext.Provider>
   );
-
-  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 }

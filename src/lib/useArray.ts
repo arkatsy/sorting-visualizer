@@ -12,5 +12,5 @@ export function useArray() {
     array: context.array,
     newArray: context.newArray,
     setSize: context.setSize,
-  };
+  } as const;
 }

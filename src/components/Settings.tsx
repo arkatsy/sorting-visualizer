@@ -1,21 +1,25 @@
-import type { ReactNode, ButtonHTMLAttributes, InputHTMLAttributes, ChangeEvent } from "react";
-import { ArrayBarsIcon, RandomizeIcon } from "./Icons";
+import type { ReactNode, ButtonHTMLAttributes, InputHTMLAttributes, ChangeEvent, MouseEvent } from "react";
+import { AnimationSpeedIcon, ArrayBarsIcon, RandomizeIcon } from "./Icons";
 import { Listbox, Transition } from "@headlessui/react";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { ArrowDownIcon, SortingIcon } from "./Icons";
 import { useArray } from "../lib/useArray";
 import { useAlgorithm } from "../lib/useAlgorithm";
 import { useStatus } from "../lib/useStatus";
 import { Algorithm, UIStatus, type AlgorithmType } from "../lib/AppContext";
-import { INITIAL_LEN, MAX_ARRAY_LEN, MIN_ARRAY_LEN } from "../lib/shared";
+import { MAX_ARRAY_LEN, MIN_ARRAY_LEN, SORT_FAST_SPEED_DELAY, SORT_SLOW_SPEED_DELAY } from "../lib/shared";
+import { useSpeed } from "../lib/useSpeed";
 
 export function Settings() {
   const { array, newArray, setSize } = useArray();
   const [status, setStatus] = useStatus();
   const [algorithm, setAlgorithm] = useAlgorithm();
+  const [speed, setSpeed] = useSpeed();
 
   const arraySizeChangeHandler = (e: ChangeEvent<HTMLInputElement>) => setSize(Number(e.target.value));
-  const sortButtonClickHandler = (e: React.MouseEvent) => setStatus(UIStatus.SORTING);
+  const animationSpeedChangeHandler = (e: ChangeEvent<HTMLInputElement>) =>
+    setSpeed(SORT_SLOW_SPEED_DELAY - Number(e.target.value));
+  const sortButtonClickHandler = (e: MouseEvent) => setStatus(UIStatus.SORTING);
 
   const shouldDisableSettings = status === UIStatus.SORTING;
 
@@ -35,6 +39,8 @@ export function Settings() {
           <div>
             <InputRange
               disabled={shouldDisableSettings}
+              min={MIN_ARRAY_LEN}
+              max={MAX_ARRAY_LEN}
               value={array.length}
               onChange={arraySizeChangeHandler}
             >
@@ -69,6 +75,18 @@ export function Settings() {
             selectedOption={algorithm}
           />
 
+          {/* Animation Speed */}
+          <InputRange
+            disabled={shouldDisableSettings}
+            min={SORT_FAST_SPEED_DELAY - 1}
+            max={SORT_SLOW_SPEED_DELAY - 1}
+            step={1}
+            defaultValue={speed}
+            onChange={animationSpeedChangeHandler}
+          >
+            Sorting Speed
+          </InputRange>
+
           {/* Button (Begin Sorting - Stop) */}
           <Button disabled={shouldDisableSettings} onClick={sortButtonClickHandler}>
             Sort
@@ -80,22 +98,14 @@ export function Settings() {
 }
 
 type InputRangeProps = {
-  value?: number;
   children: ReactNode;
 } & InputHTMLAttributes<HTMLInputElement>;
 
-export function InputRange({ value = INITIAL_LEN, children, ...props }: InputRangeProps) {
+export function InputRange({ children, ...props }: InputRangeProps) {
   return (
     <div className="flex flex-col gap-1">
       <label className="text-sm">{children}</label>
-      <input
-        type="range"
-        min={MIN_ARRAY_LEN}
-        max={MAX_ARRAY_LEN}
-        value={value}
-        className={`w-full accent-zinc-400`}
-        {...props}
-      />
+      <input type="range" className={`w-full accent-zinc-400 disabled:cursor-not-allowed`} {...props} />
     </div>
   );
 }

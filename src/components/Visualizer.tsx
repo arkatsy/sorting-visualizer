@@ -5,26 +5,27 @@ import { useAlgorithm } from "../lib/useAlgorithm";
 import { Algorithm, AlgorithmType, UIStatus } from "../lib/AppContext";
 import { bubbleSort, heapSort, insertionSort, mergeSort, quickSort, selectionSort } from "../algorithms";
 import { type OverrideAnimationsGenerator, type SwapAnimationsGenerator } from "../algorithms/shared";
+import { useSpeed } from "../lib/useSpeed";
 
 type AnimationGenerators = SwapAnimationsGenerator | OverrideAnimationsGenerator;
+
+const COLORS = {
+  DEFAULT: "#52525b", // bg-zinc-600
+  GREEN: "#22c55e", // bg-green-500
+  RED: "#ef4444", // bg-red-500
+};
+
 
 export function Visualizer() {
   const [status, setStatus] = useStatus();
   const [algorithm] = useAlgorithm();
   const { array } = useArray();
+  const [animationSpeed] = useSpeed();
   const [generator, setGenerator] = useState<AnimationGenerators | null>(null);
   const visualBarsContainerRef = useRef<HTMLDivElement>(null);
 
   const shouldAnimate = status === UIStatus.SORTING;
   const enableSettings = () => setStatus(UIStatus.IDLE);
-
-  const animationSpeed = array.length > 20 ? 250 / array.length : array.length >= 10 ? 110 : 200;
-
-  const COLORS = {
-    DEFAULT: "#52525b", // bg-zinc-600
-    GREEN: "#22c55e", // bg-green-500
-    RED: "#ef4444", // bg-red-500
-  };
 
   useEffect(() => {
     if (shouldAnimate) {
