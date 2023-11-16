@@ -1,6 +1,6 @@
-import { type SwapAnimationsGenerator, swap } from "./shared";
+import { type SwapAnimationsGenerator, swap } from "@/lib/shared";
 
-export function* selectionSort(array: Array<number>): SwapAnimationsGenerator {
+export default function* selectionSort(array: Array<number>): SwapAnimationsGenerator {
   let currentIdx = 0;
   while (currentIdx < array.length - 1) {
     let smallestIdx = currentIdx;

@@ -1,7 +1,7 @@
 import { useContext } from "react";
-import { AppContext } from "./AppContext";
+import { AppContext } from "@/lib/AppContext";
 
-export function useArray() {
+export default function useArray() {
   const context = useContext(AppContext);
 
   if (!context) {

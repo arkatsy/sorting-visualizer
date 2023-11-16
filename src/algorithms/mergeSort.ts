@@ -1,6 +1,6 @@
-import { type OverrideAnimationsGenerator } from "./shared";
+import { type OverrideAnimationsGenerator } from "@/lib/shared";
 
-export function* mergeSort(array: Array<number>): OverrideAnimationsGenerator {
+export default function* mergeSort(array: Array<number>): OverrideAnimationsGenerator {
   if (array.length <= 1) return array;
 
   const auxiliaryArray = array.slice();

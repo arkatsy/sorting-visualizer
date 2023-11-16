@@ -1,6 +1,5 @@
-import { useReducer } from "react";
-import { createContext, type ReactNode, type Reducer } from "react";
-import { generateRandomArray, INITIAL_LEN, MAX_ARRAY_SIZE, MIN_ARRAY_SIZE, SPEED_OPTIONS } from "./shared";
+import { createContext, useReducer, type ReactNode, type Reducer } from "react";
+import { generateRandomArray, INITIAL_LEN, MAX_ARRAY_SIZE, MIN_ARRAY_SIZE, SPEED_OPTIONS } from "@/lib/shared";
 
 export const UIStatus = {
   IDLE: "IDLE",

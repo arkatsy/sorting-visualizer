@@ -1,7 +1,7 @@
 import { useContext } from "react";
-import { AppContext } from "./AppContext";
+import { AppContext } from "@/lib/AppContext";
 
-export function useSpeed() {
+export default function useSpeed() {
   const context = useContext(AppContext);
 
   if (!context) {

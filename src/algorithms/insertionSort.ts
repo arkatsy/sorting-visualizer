@@ -1,6 +1,6 @@
-import { type SwapAnimationsGenerator, swap } from "./shared";
+import { type SwapAnimationsGenerator, swap } from "@/lib/shared";
 
-export function* insertionSort(array: Array<number>): SwapAnimationsGenerator {
+export default function* insertionSort(array: Array<number>): SwapAnimationsGenerator {
   for (let i = 0; i < array.length; i++) {
     let j = i;
     yield { type: "comparison", payload: [j, j - 1] };

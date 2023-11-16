@@ -1,6 +1,6 @@
-import { type SwapAnimationsGenerator, swap } from "./shared";
+import { type SwapAnimationsGenerator, swap } from "@/lib/shared";
 
-export function* heapSort(array: Array<number>): SwapAnimationsGenerator {
+export default function* heapSort(array: Array<number>): SwapAnimationsGenerator {
   yield* buildMaxHeap(array);
   for (let endIdx = array.length - 1; endIdx >= 1; endIdx--) {
     yield { type: "swap", payload: [0, endIdx] };

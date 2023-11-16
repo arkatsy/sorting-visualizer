@@ -17,3 +17,27 @@ export const SPEED_OPTIONS = {
 export function generateRandomArray(size: number, min: number, max: number) {
   return Array.from({ length: size }, () => Math.floor(Math.random() * (max - min + 1) + min));
 }
+
+// --- @/algorithm related utils
+
+// Swap Animation Types
+export type SwapAnimationType = "comparison" | "swap";
+export type SwapAnimation = {
+  type: SwapAnimationType;
+  payload: [number, number];
+};
+export type SwapAnimationsGenerator = Generator<SwapAnimation>;
+
+// Override Animation Types
+export type OverrideAnimationType = "comparison" | "override";
+export type OverrideAnimation = {
+  type: OverrideAnimationType;
+  payload: [number, number];
+};
+export type OverrideAnimationsGenerator = Generator<OverrideAnimation>;
+
+export function swap(i: number, j: number, array: Array<number>) {
+  const temp = array[i];
+  array[i] = array[j];
+  array[j] = temp;
+}

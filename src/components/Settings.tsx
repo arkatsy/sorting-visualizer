@@ -1,14 +1,24 @@
-import type { ReactNode, ButtonHTMLAttributes, InputHTMLAttributes, ChangeEvent, MouseEvent } from "react";
-import { AnimationSpeedIcon, ArrayBarsIcon, RandomizeIcon } from "./Icons";
+import {
+  Fragment,
+  type ReactNode,
+  type ButtonHTMLAttributes,
+  type InputHTMLAttributes,
+  type ChangeEvent,
+} from "react";
+import {
+  AnimationSpeedIcon,
+  ArrayBarsIcon,
+  RandomizeIcon,
+  ArrowDownIcon,
+  SortingIcon,
+} from "@/components/Icons";
 import { Listbox, RadioGroup, Transition } from "@headlessui/react";
-import { Fragment } from "react";
-import { ArrowDownIcon, SortingIcon } from "./Icons";
-import { useArray } from "../lib/useArray";
-import { useAlgorithm } from "../lib/useAlgorithm";
-import { useStatus } from "../lib/useStatus";
-import { Algorithm, UIStatus, type AlgorithmType } from "../lib/AppContext";
-import { MAX_ARRAY_LEN, MIN_ARRAY_LEN, SPEED_OPTIONS } from "../lib/shared";
-import { useSpeed } from "../lib/useSpeed";
+import useArray from "@/hooks/useArray";
+import useAlgorithm from "@/hooks/useAlgorithm";
+import useStatus from "@/hooks/useStatus";
+import useSpeed from "@/hooks/useSpeed";
+import { Algorithm, UIStatus, type AlgorithmType } from "@/lib/AppContext";
+import { MAX_ARRAY_LEN, MIN_ARRAY_LEN, SPEED_OPTIONS } from "@/lib/shared";
 
 export function Settings() {
   const { array, newArray, setSize } = useArray();

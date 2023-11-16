@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, useState } from "react";
 
-export function useClientRect<TNode extends HTMLElement>() {
+export default function useClientRect<TNode extends HTMLElement>() {
   const [rect, setRect] = useState<DOMRect>({
     bottom: 0,
     height: 0,
