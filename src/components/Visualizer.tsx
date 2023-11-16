@@ -15,7 +15,6 @@ const COLORS = {
   RED: "#ef4444", // bg-red-500
 };
 
-
 export function Visualizer() {
   const [status, setStatus] = useStatus();
   const [algorithm] = useAlgorithm();
@@ -120,22 +119,28 @@ export function Visualizer() {
         });
       }, ++i * animationSpeed); // immediately after finishing sorting
 
-      setTimeout(() => {
-        Object.values(visualBars).forEach((bar) => {
-          bar.style.backgroundColor = COLORS.DEFAULT;
-        });
-      }, ++i * animationSpeed + 600); // after .6s
+      setTimeout(
+        () => {
+          Object.values(visualBars).forEach((bar) => {
+            bar.style.backgroundColor = COLORS.DEFAULT;
+          });
+        },
+        ++i * animationSpeed + 600,
+      ); // after .6s
 
-      setTimeout(() => {
-        enableSettings();
-        setGenerator(null);
-      }, ++i * animationSpeed + 700); // after .7s
+      setTimeout(
+        () => {
+          enableSettings();
+          setGenerator(null);
+        },
+        ++i * animationSpeed + 700,
+      ); // after .7s
     }
   }, [generator]);
 
   return (
     <div id="visualizer" className="relative z-10 h-full">
-      <div className="bg-zinc-800 px-4 flex items-end gap-1 h-[88%]" ref={visualBarsContainerRef}>
+      <div className="flex h-[88%] items-end gap-1 bg-zinc-800 px-4" ref={visualBarsContainerRef}>
         {array.map((value, index) => (
           <div
             className={`relative w-full rounded-lg bg-zinc-600`}
@@ -152,7 +157,7 @@ export function Visualizer() {
 
 function isOverrideAnimation(
   animationGenerator: AnimationGenerators,
-  algorithm: AlgorithmType
+  algorithm: AlgorithmType,
 ): animationGenerator is OverrideAnimationsGenerator {
   return algorithm === "MERGE_SORT";
 }

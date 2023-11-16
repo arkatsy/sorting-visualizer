@@ -1,13 +1,13 @@
 import type { ReactNode, ButtonHTMLAttributes, InputHTMLAttributes, ChangeEvent, MouseEvent } from "react";
 import { AnimationSpeedIcon, ArrayBarsIcon, RandomizeIcon } from "./Icons";
-import { Listbox, Transition } from "@headlessui/react";
+import { Listbox, RadioGroup, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import { ArrowDownIcon, SortingIcon } from "./Icons";
 import { useArray } from "../lib/useArray";
 import { useAlgorithm } from "../lib/useAlgorithm";
 import { useStatus } from "../lib/useStatus";
 import { Algorithm, UIStatus, type AlgorithmType } from "../lib/AppContext";
-import { MAX_ARRAY_LEN, MIN_ARRAY_LEN, SORT_FAST_SPEED_DELAY, SORT_SLOW_SPEED_DELAY } from "../lib/shared";
+import { MAX_ARRAY_LEN, MIN_ARRAY_LEN, SPEED_OPTIONS } from "../lib/shared";
 import { useSpeed } from "../lib/useSpeed";
 
 export function Settings() {
@@ -17,16 +17,15 @@ export function Settings() {
   const [speed, setSpeed] = useSpeed();
 
   const arraySizeChangeHandler = (e: ChangeEvent<HTMLInputElement>) => setSize(Number(e.target.value));
-  const animationSpeedChangeHandler = (e: ChangeEvent<HTMLInputElement>) =>
-    setSpeed(SORT_SLOW_SPEED_DELAY - Number(e.target.value));
-  const sortButtonClickHandler = (e: MouseEvent) => setStatus(UIStatus.SORTING);
+  const animationSpeedChangeHandler = (newSpeed: number) => setSpeed(newSpeed);
+  const sortButtonClickHandler = () => setStatus(UIStatus.SORTING);
 
   const shouldDisableSettings = status === UIStatus.SORTING;
 
   return (
     <div id="settings" className="relative z-20 font-semibold">
       <div className="h-20 bg-zinc-900">
-        <div className="flex items-center h-full px-4 md:px-6 gap-6 justify-center">
+        <div className="flex h-full items-center justify-center gap-8 px-4 md:px-6">
           {/* Randomizer Button (new array) */}
           <Button disabled={shouldDisableSettings} onClick={newArray}>
             <div className="flex gap-2">
@@ -53,12 +52,12 @@ export function Settings() {
                       array.length < 50
                         ? "text-green-500"
                         : array.length < 85
-                        ? "text-yellow-500"
-                        : array.length < 150
-                        ? "text-orange-500"
-                        : array.length < 200
-                        ? "text-red-400"
-                        : "text-red-500"
+                          ? "text-yellow-500"
+                          : array.length < 150
+                            ? "text-orange-500"
+                            : array.length < 200
+                              ? "text-red-400"
+                              : "text-red-500"
                     }`}
                   >
                     {array.length}
@@ -76,19 +75,11 @@ export function Settings() {
           />
 
           {/* Animation Speed */}
-          <InputRange
-            disabled={shouldDisableSettings}
-            min={SORT_FAST_SPEED_DELAY - 1}
-            max={SORT_SLOW_SPEED_DELAY - 1}
-            step={1}
-            defaultValue={SORT_SLOW_SPEED_DELAY - speed}
+          <AnimationSpeedOptions
             onChange={animationSpeedChangeHandler}
-          >
-            <div className="flex gap-2 items-center">
-              <AnimationSpeedIcon />
-              Sorting Speed
-            </div>
-          </InputRange>
+            activeSpeed={speed}
+            disabled={shouldDisableSettings}
+          />
 
           {/* Button (Begin Sorting - Stop) */}
           <Button disabled={shouldDisableSettings} onClick={sortButtonClickHandler}>
@@ -120,9 +111,9 @@ type ButtonProps = {
 function Button({ children, ...props }: ButtonProps) {
   return (
     <button
-      className="bg-zinc-700 px-4 py-2 rounded-md hover:bg-zinc-600 select-none
-    focus:ring-2 focus:ring-zinc-400 focus:outline-none
-    disabled:opacity-50 disabled:cursor-not-allowed"
+      className="select-none rounded-md bg-zinc-700 px-4 py-2 hover:bg-zinc-600
+    focus:outline-none focus:ring-2 focus:ring-zinc-400
+    disabled:cursor-not-allowed disabled:opacity-50"
       {...props}
     >
       {children}
@@ -136,22 +127,18 @@ type AlgorithmListOptionsProps = {
   onChange?: (newAlgo: AlgorithmType) => void;
 };
 
-function AlgorithmListOptions({
-  selectedOption,
-  disabled = false,
-  onChange,
-}: AlgorithmListOptionsProps) {
+function AlgorithmListOptions({ selectedOption, disabled = false, onChange }: AlgorithmListOptionsProps) {
   return (
     <Listbox as="div" value={selectedOption} className="relative" onChange={onChange} disabled={disabled}>
       <Listbox.Button
-        className="bg-zinc-700 px-4 py-2 rounded-md hover:bg-zinc-600 select-none
-        focus:ring-2 focus:ring-zinc-400 focus:outline-none
-        disabled:opacity-50 disabled:cursor-not-allowed flex"
+        className="flex select-none rounded-md bg-zinc-700 px-4 py-2
+        hover:bg-zinc-600 focus:outline-none focus:ring-2
+        focus:ring-zinc-400 disabled:cursor-not-allowed disabled:opacity-50"
       >
         <div className="mr-2">
           <SortingIcon />
         </div>
-        <span className="w-52 flex gap-4">
+        <span className="flex w-52 gap-4">
           <span className="font-bold">Algorithm: </span>
           {beautifyAlgoNames(selectedOption)}
         </span>
@@ -168,13 +155,13 @@ function AlgorithmListOptions({
         leaveFrom="opacity-100 scale-100"
         leaveTo="opacity-0 scale-95"
       >
-        <Listbox.Options className="absolute mt-1 w-full bg-zinc-700 rounded-md">
+        <Listbox.Options className="absolute mt-1 w-full rounded-md bg-zinc-700">
           {Object.values(Algorithm).map((algorithm, idx) => (
             <Listbox.Option
               value={algorithm}
               key={idx}
               className={({ active }) =>
-                `cursor-pointer select-none py-2 px-4 rounded-md whitespace-nowrap ${
+                `cursor-pointer select-none whitespace-nowrap rounded-md py-2 px-4 ${
                   active ? "bg-zinc-600" : ""
                 }`
               }
@@ -194,4 +181,59 @@ function beautifyAlgoNames(algoName: AlgorithmType) {
     .split("_")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
+}
+
+type AnimationSpeedOptionsProps = {
+  onChange: (newSpeed: number) => void;
+  activeSpeed: number;
+  disabled: boolean;
+};
+
+function AnimationSpeedOptions({ onChange, activeSpeed, disabled }: AnimationSpeedOptionsProps) {
+  const onChangeWrapper = (newSpeed: number) => {
+    onChange(newSpeed);
+  };
+
+  return (
+    <RadioGroup value={activeSpeed} onChange={onChangeWrapper} className="flex gap-3 ">
+      <RadioGroup.Label className="flex items-center gap-2">
+        <AnimationSpeedIcon /> Animation Speed:
+      </RadioGroup.Label>
+      <div className="flex gap-3">
+        <RadioGroup.Option
+          value={SPEED_OPTIONS.SLOW}
+          className="cursor-pointer rounded-md focus:outline-none focus:ring-2 focus:ring-zinc-400 disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={disabled}
+        >
+          {({ checked }) => (
+            <div className={`rounded-md px-4 py-2 hover:bg-zinc-600 ${checked && "bg-zinc-700"}`}>
+              <span className="select-none">Slow</span>
+            </div>
+          )}
+        </RadioGroup.Option>
+        <RadioGroup.Option
+          value={SPEED_OPTIONS.NORMAL}
+          className="cursor-pointer rounded-md focus:outline-none focus:ring-2 focus:ring-zinc-400 disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={disabled}
+        >
+          {({ checked }) => (
+            <div className={`rounded-md px-4 py-2 hover:bg-zinc-600 ${checked && "bg-zinc-700"}`}>
+              <span className="select-none">Normal</span>
+            </div>
+          )}
+        </RadioGroup.Option>
+        <RadioGroup.Option
+          value={SPEED_OPTIONS.FAST}
+          className="cursor-pointer rounded-md focus:outline-none focus:ring-2 focus:ring-zinc-400 disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={disabled}
+        >
+          {({ checked }) => (
+            <div className={`rounded-md px-4 py-2 hover:bg-zinc-600 ${checked && "bg-zinc-700"}`}>
+              <span className="select-none">Fast</span>
+            </div>
+          )}
+        </RadioGroup.Option>
+      </div>
+    </RadioGroup>
+  );
 }

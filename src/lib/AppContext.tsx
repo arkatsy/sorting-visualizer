@@ -1,6 +1,6 @@
 import { useReducer } from "react";
 import { createContext, type ReactNode, type Reducer } from "react";
-import { generateRandomArray, INITIAL_LEN, INITIAL_SORT_SPEED_DELAY, MAX_ARRAY_SIZE, MIN_ARRAY_SIZE, SORT_SLOW_SPEED_DELAY } from "./shared";
+import { generateRandomArray, INITIAL_LEN, MAX_ARRAY_SIZE, MIN_ARRAY_SIZE, SPEED_OPTIONS } from "./shared";
 
 export const UIStatus = {
   IDLE: "IDLE",
@@ -60,8 +60,7 @@ export const INITIAL_STATE: State = {
   status: UIStatus.IDLE,
   algorithm: Algorithm.MERGE_SORT,
   array: generateRandomArray(INITIAL_LEN, MIN_ARRAY_SIZE, MAX_ARRAY_SIZE),
-  // speed: INITIAL_SPEED,
-  speed: INITIAL_SORT_SPEED_DELAY
+  speed: SPEED_OPTIONS.FAST,
 };
 
 export type AppContextType = {
@@ -104,7 +103,7 @@ const globalStateReducer: Reducer<State, Actions> = (state, action) => {
     case Action.SET_SPEED:
       return {
         ...state,
-        speed: action.payload
+        speed: action.payload,
       };
     default:
       return state;
@@ -127,8 +126,7 @@ export function GlobalContext({ children }: { children: ReactNode }) {
         newArray: () => dispatch({ type: Action.NEW_ARRAY }),
         setSize: (newSize: number) => dispatch({ type: Action.SET_SIZE, payload: newSize }),
         speed: state.speed,
-        setSpeed: (newSpeed: number) =>
-          dispatch({ type: Action.SET_SPEED, payload: newSpeed}),
+        setSpeed: (newSpeed: number) => dispatch({ type: Action.SET_SPEED, payload: newSpeed }),
       }}
     >
       {children}
