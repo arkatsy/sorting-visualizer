@@ -15,7 +15,42 @@ export const SPEED_OPTIONS = {
 };
 
 export function generateRandomArray(size: number, min: number, max: number) {
-  return Array.from({ length: size }, () => Math.floor(Math.random() * (max - min + 1) + min));
+  return Array.from({ length: size }, () => getRandomIntFromInterval(min, max));
+}
+
+export function getRandomIntFromInterval(min: number, max: number) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+export const Algorithm = {
+  BUBBLE_SORT: "BUBBLE_SORT",
+  HEAP_SORT: "HEAP_SORT",
+  MERGE_SORT: "MERGE_SORT",
+  SELECTION_SORT: "SELECTION_SORT",
+  INSERTION_SORT: "INSERTION_SORT",
+  QUICK_SORT: "QUICK_SORT",
+} as const;
+
+export type AlgorithmType = keyof typeof Algorithm;
+
+export function toCamelCase(name: AlgorithmType) {
+  const words = name.toLowerCase().split("_");
+
+  return words
+    .map((word, index) => {
+      if (index === 0) {
+        return word;
+      }
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    })
+    .join("");
+}
+
+export function isOverrideAnimation(
+  animationGenerator: AnimationGenerators,
+  algorithm: AlgorithmType,
+): animationGenerator is OverrideAnimationsGenerator {
+  return algorithm === "MERGE_SORT";
 }
 
 // --- @/algorithm related utils
@@ -36,7 +71,9 @@ export type OverrideAnimation = {
 };
 export type OverrideAnimationsGenerator = Generator<OverrideAnimation>;
 
-export function swap(i: number, j: number, array: Array<number>) {
+export type AnimationGenerators = SwapAnimationsGenerator | OverrideAnimationsGenerator;
+
+export function swap(array: Array<number>, i: number, j: number) {
   const temp = array[i];
   array[i] = array[j];
   array[j] = temp;
