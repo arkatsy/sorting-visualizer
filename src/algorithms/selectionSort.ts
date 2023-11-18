@@ -11,7 +11,7 @@ export default function* selectionSort(array: Array<number>): SwapAnimationsGene
       }
     }
     yield { type: "swap", payload: [currentIdx, smallestIdx] };
-    swap(currentIdx++, smallestIdx, array);
+    swap(array, currentIdx++, smallestIdx);
   }
   return array;
 }

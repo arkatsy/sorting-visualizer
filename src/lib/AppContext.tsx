@@ -1,18 +1,9 @@
 import { createContext, useReducer, type ReactNode, type Reducer } from "react";
-import { generateRandomArray, INITIAL_LEN, MAX_ARRAY_SIZE, MIN_ARRAY_SIZE, SPEED_OPTIONS } from "@/lib/shared";
+import { Algorithm, type AlgorithmType, generateRandomArray, INITIAL_LEN, MAX_ARRAY_SIZE, MIN_ARRAY_SIZE, SPEED_OPTIONS } from "@/lib/shared";
 
 export const UIStatus = {
   IDLE: "IDLE",
   SORTING: "SORTING",
-} as const;
-
-export const Algorithm = {
-  BUBBLE_SORT: "BUBBLE_SORT",
-  HEAP_SORT: "HEAP_SORT",
-  MERGE_SORT: "MERGE_SORT",
-  SELECTION_SORT: "SELECTION_SORT",
-  INSERTION_SORT: "INSERTION_SORT",
-  QUICK_SORT: "QUICK_SORT",
 } as const;
 
 export const Action = {
@@ -24,7 +15,6 @@ export const Action = {
 } as const;
 
 export type UIStatusType = keyof typeof UIStatus;
-export type AlgorithmType = keyof typeof Algorithm;
 export type ActionType = keyof typeof Action;
 
 export type State = {

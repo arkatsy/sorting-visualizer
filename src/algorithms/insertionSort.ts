@@ -6,7 +6,7 @@ export default function* insertionSort(array: Array<number>): SwapAnimationsGene
     yield { type: "comparison", payload: [j, j - 1] };
     while (j > 0 && array[j] < array[j - 1]) {
       yield { type: "swap", payload: [j, j - 1] };
-      swap(j, j - 1, array);
+      swap(array, j, j - 1);
       j--;
     }
   }

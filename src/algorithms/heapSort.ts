@@ -4,7 +4,7 @@ export default function* heapSort(array: Array<number>): SwapAnimationsGenerator
   yield* buildMaxHeap(array);
   for (let endIdx = array.length - 1; endIdx >= 1; endIdx--) {
     yield { type: "swap", payload: [0, endIdx] };
-    swap(0, endIdx, array);
+    swap(array, 0, endIdx);
     yield* siftDown(0, endIdx - 1, array);
   }
   return array;
@@ -31,7 +31,7 @@ function* siftDown(currentIdx: number, endIdx: number, array: Array<number>): Sw
     yield { type: "comparison", payload: [currentIdx, idxToSwap] };
     if (array[idxToSwap] > array[currentIdx]) {
       yield { type: "swap", payload: [currentIdx, idxToSwap] };
-      swap(idxToSwap, currentIdx, array);
+      swap(array, idxToSwap, currentIdx);
       currentIdx = idxToSwap;
       childLeftIdx = getLeftChildIdx(currentIdx);
     } else {

@@ -21,7 +21,7 @@ function* quickSortHelper(
     yield { type: "comparison", payload: [leftIdx, rightIdx] };
     if (array[leftIdx] > array[pivotIdx] && array[rightIdx] < array[pivotIdx]) {
       yield { type: "swap", payload: [leftIdx, rightIdx] };
-      swap(leftIdx, rightIdx, array);
+      swap(array, leftIdx, rightIdx);
     }
     yield { type: "comparison", payload: [leftIdx, pivotIdx] };
     if (array[leftIdx] <= array[pivotIdx]) {
@@ -33,7 +33,7 @@ function* quickSortHelper(
     }
   }
   yield { type: "swap", payload: [pivotIdx, rightIdx] };
-  swap(pivotIdx, rightIdx, array);
+  swap(array, pivotIdx, rightIdx);
   const leftSubarrayIsSmaller = rightIdx - 1 - startIdx < endIdx - (rightIdx + 1);
   if (leftSubarrayIsSmaller) {
     yield* quickSortHelper(array, startIdx, rightIdx - 1);

@@ -3,16 +3,14 @@ import useStatus from "@/hooks/useStatus";
 import useArray from "@/hooks/useArray";
 import useAlgorithm from "@/hooks/useAlgorithm";
 import useSpeed from "@/hooks/useSpeed";
-import { Algorithm, AlgorithmType, UIStatus } from "@/lib/AppContext";
-import { type OverrideAnimationsGenerator, type SwapAnimationsGenerator } from "@/lib/shared";
+import { UIStatus } from "@/lib/AppContext";
+import { isOverrideAnimation, type AnimationGenerators, Algorithm } from "@/lib/shared";
 import bubbleSort from "@/algorithms/bubbleSort";
 import insertionSort from "@/algorithms/insertionSort";
 import mergeSort from "@/algorithms/mergeSort";
 import heapSort from "@/algorithms/heapSort";
 import quickSort from "@/algorithms/quickSort";
 import selectionSort from "@/algorithms/selectionSort";
-
-type AnimationGenerators = SwapAnimationsGenerator | OverrideAnimationsGenerator;
 
 const COLORS = {
   DEFAULT: "#52525b", // bg-zinc-600
@@ -158,11 +156,4 @@ export function Visualizer() {
       </div>
     </div>
   );
-}
-
-function isOverrideAnimation(
-  animationGenerator: AnimationGenerators,
-  algorithm: AlgorithmType,
-): animationGenerator is OverrideAnimationsGenerator {
-  return algorithm === "MERGE_SORT";
 }

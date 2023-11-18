@@ -17,8 +17,8 @@ import useArray from "@/hooks/useArray";
 import useAlgorithm from "@/hooks/useAlgorithm";
 import useStatus from "@/hooks/useStatus";
 import useSpeed from "@/hooks/useSpeed";
-import { Algorithm, UIStatus, type AlgorithmType } from "@/lib/AppContext";
-import { MAX_ARRAY_LEN, MIN_ARRAY_LEN, SPEED_OPTIONS } from "@/lib/shared";
+import { Algorithm, type AlgorithmType, MAX_ARRAY_LEN, MIN_ARRAY_LEN, SPEED_OPTIONS } from "@/lib/shared";
+import { UIStatus } from "@/lib/AppContext";
 
 export function Settings() {
   const { array, newArray, setSize } = useArray();
@@ -212,7 +212,9 @@ function AnimationSpeedOptions({ onChange, activeSpeed, disabled }: AnimationSpe
       <div className="flex gap-3">
         <RadioGroup.Option
           value={SPEED_OPTIONS.SLOW}
-          className="cursor-pointer rounded-md focus:outline-none focus:ring-2 focus:ring-zinc-400 disabled:cursor-not-allowed disabled:opacity-50"
+          className={`cursor-pointer rounded-md focus:outline-none focus:ring-2 focus:ring-zinc-400 ${
+            disabled ? "cursor-not-allowed opacity-50" : ""
+          }`}
           disabled={disabled}
         >
           {({ checked }) => (
@@ -223,7 +225,9 @@ function AnimationSpeedOptions({ onChange, activeSpeed, disabled }: AnimationSpe
         </RadioGroup.Option>
         <RadioGroup.Option
           value={SPEED_OPTIONS.NORMAL}
-          className="cursor-pointer rounded-md focus:outline-none focus:ring-2 focus:ring-zinc-400 disabled:cursor-not-allowed disabled:opacity-50"
+          className={`cursor-pointer rounded-md focus:outline-none focus:ring-2 focus:ring-zinc-400 ${
+            disabled ? "cursor-not-allowed opacity-50" : ""
+          }`}
           disabled={disabled}
         >
           {({ checked }) => (
@@ -234,7 +238,9 @@ function AnimationSpeedOptions({ onChange, activeSpeed, disabled }: AnimationSpe
         </RadioGroup.Option>
         <RadioGroup.Option
           value={SPEED_OPTIONS.FAST}
-          className="cursor-pointer rounded-md focus:outline-none focus:ring-2 focus:ring-zinc-400 disabled:cursor-not-allowed disabled:opacity-50"
+          className={`cursor-pointer rounded-md focus:outline-none focus:ring-2 focus:ring-zinc-400 ${
+            disabled ? "cursor-not-allowed opacity-50" : ""
+          }`}
           disabled={disabled}
         >
           {({ checked }) => (
