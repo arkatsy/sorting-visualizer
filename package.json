@@ -7,6 +7,7 @@
     "dev": "vite",
     "test": "vitest --run",
     "test:ui": "vitest --ui",
+    "test:watch": "vitest",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
@@ -32,6 +33,7 @@
     "tailwindcss": "^3.2.7",
     "typescript": "^4.9.5",
     "vite": "^4.1.4",
+    "vite-tsconfig-paths": "^4.2.1",
     "vitest": "^0.34.6"
   }
 }

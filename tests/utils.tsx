@@ -1,4 +1,4 @@
-import { cleanup, render } from "@testing-library/react";
+import { type RenderOptions, cleanup, render } from "@testing-library/react";
 import { afterEach } from "vitest";
 import type { ReactElement } from "react";
 import {
@@ -12,12 +12,20 @@ import {
   MIN_ARRAY_SIZE,
   MAX_ARRAY_LEN,
 } from "../src/lib/shared";
+import { GlobalContext } from "@/lib/AppContext";
 
 afterEach(() => {
   cleanup();
 });
 
-function customRender(ui: ReactElement, options = {}) {
+export function renderWithGlobalContext(ui: ReactElement, options?: Omit<RenderOptions, "wrapper">) {
+  return render(ui, {
+    wrapper: ({ children }) => <GlobalContext>{children}</GlobalContext>,
+    ...options,
+  });
+}
+
+export function customRender(ui: ReactElement, options = {}) {
   return render(ui, {
     wrapper: ({ children }) => children,
     ...options,
@@ -58,7 +66,8 @@ export async function applyAlgorithm(array: number[], algorithmName: AlgorithmTy
     // The generator sorts in-place & spits animation tuples.
     // To just sort the array we can iterate through it.
     const sorter = generator!(array);
-    for (const _ of sorter) {}
+    for (const _ of sorter) {
+    }
   }
 
   return error
